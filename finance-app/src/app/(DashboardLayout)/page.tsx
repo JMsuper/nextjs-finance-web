@@ -1,20 +1,14 @@
 'use client'
 import { Grid, Box } from '@mui/material';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
-// components
-import SalesOverview from '@/app/(DashboardLayout)/components/dashboard/SalesOverview';
-import YearlyBreakup from '@/app/(DashboardLayout)/components/dashboard/YearlyBreakup';
-import RecentTransactions from '@/app/(DashboardLayout)/components/dashboard/RecentTransactions';
-import ProductPerformance from '@/app/(DashboardLayout)/components/dashboard/ProductPerformance';
-import Blog from '@/app/(DashboardLayout)/components/dashboard/Blog';
-import MonthlyEarnings from '@/app/(DashboardLayout)/components/dashboard/MonthlyEarnings';
+import StockInfoTable from './components/dashboard/StockInfoTable';
 
 const Dashboard = () => {
   return (
     <PageContainer title="Dashboard" description="this is Dashboard">
       <Box>
         <Grid container spacing={3}>
-          <Grid item xs={12} lg={8}>
+          {/* <Grid item xs={12} lg={8}>
             <SalesOverview />
           </Grid>
           <Grid item xs={12} lg={4}>
@@ -29,13 +23,16 @@ const Dashboard = () => {
           </Grid>
           <Grid item xs={12} lg={4}>
             <RecentTransactions />
-          </Grid>
-          <Grid item xs={12} lg={8}>
+          </Grid> */}
+          {/* <Grid item xs={12} lg={8}>
             <ProductPerformance />
+          </Grid> */}
+          <Grid item lg={12}>
+            <StockInfoTable />
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <Blog />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Box>
     </PageContainer>

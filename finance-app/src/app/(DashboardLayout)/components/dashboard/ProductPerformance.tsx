@@ -6,56 +6,39 @@ import {
     TableCell,
     TableHead,
     TableRow,
-    Chip
+    Chip,
+    TablePagination,
+    Pagination,
+    PaginationItem,
 } from '@mui/material';
 import DashboardCard from '@/app/(DashboardLayout)//components/shared/DashboardCard';
+import useFetch from '@/app/hooks/useFetch';
+import { useState } from 'react';
 
-const products = [
-    {
-        id: "1",
-        name: "Sunil Joshi",
-        post: "Web Designer",
-        pname: "Elite Admin",
-        priority: "Low",
-        pbg: "primary.main",
-        budget: "3.9",
-    },
-    {
-        id: "2",
-        name: "Andrew McDownland",
-        post: "Project Manager",
-        pname: "Real Homes WP Theme",
-        priority: "Medium",
-        pbg: "secondary.main",
-        budget: "24.5",
-    },
-    {
-        id: "3",
-        name: "Christopher Jamil",
-        post: "Project Manager",
-        pname: "MedicalPro WP Theme",
-        priority: "High",
-        pbg: "error.main",
-        budget: "12.8",
-    },
-    {
-        id: "4",
-        name: "Nirav Joshi",
-        post: "Frontend Engineer",
-        pname: "Hosting Press HTML",
-        priority: "Critical",
-        pbg: "success.main",
-        budget: "2.4",
-    },
-];
+interface stockInfo {
+    name: string,
+    stockCd: string,
+    corpCd: string,
+    market: string
+}
+
 
 
 const ProductPerformance = () => {
+    const products: stockInfo[] = useFetch("http://localhost:3001/stockInfos")
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    const onPageChange = (e: React.ChangeEvent<unknown>, page: number) => {
+        setCurrentPage(page);
+    };
+
     return (
 
         <DashboardCard title="Product Performance">
             <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
-                <Table
+                {/* <Table
                     aria-label="simple table"
                     sx={{
                         whiteSpace: "nowrap",
@@ -66,27 +49,22 @@ const ProductPerformance = () => {
                         <TableRow>
                             <TableCell>
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Id
+                                    종목명
                                 </Typography>
                             </TableCell>
                             <TableCell>
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Assigned
+                                    종목코드
                                 </Typography>
                             </TableCell>
                             <TableCell>
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Name
+                                    기업코드
                                 </Typography>
                             </TableCell>
                             <TableCell>
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Priority
-                                </Typography>
-                            </TableCell>
-                            <TableCell align="right">
-                                <Typography variant="subtitle2" fontWeight={600}>
-                                    Budget
+                                    시장
                                 </Typography>
                             </TableCell>
                         </TableRow>
@@ -101,7 +79,7 @@ const ProductPerformance = () => {
                                             fontWeight: "500",
                                         }}
                                     >
-                                        {product.id}
+                                        {product.name}
                                     </Typography>
                                 </TableCell>
                                 <TableCell>
@@ -112,43 +90,53 @@ const ProductPerformance = () => {
                                         }}
                                     >
                                         <Box>
-                                            <Typography variant="subtitle2" fontWeight={600}>
-                                                {product.name}
-                                            </Typography>
                                             <Typography
                                                 color="textSecondary"
                                                 sx={{
                                                     fontSize: "13px",
                                                 }}
                                             >
-                                                {product.post}
+                                                {product.stockCd}
                                             </Typography>
                                         </Box>
                                     </Box>
                                 </TableCell>
                                 <TableCell>
                                     <Typography color="textSecondary" variant="subtitle2" fontWeight={400}>
-                                        {product.pname}
+                                        {product.corpCd}
                                     </Typography>
                                 </TableCell>
                                 <TableCell>
                                     <Chip
                                         sx={{
                                             px: "4px",
-                                            backgroundColor: product.pbg,
                                             color: "#fff",
                                         }}
                                         size="small"
-                                        label={product.priority}
+                                        label={product.market}
                                     ></Chip>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <Typography variant="h6">${product.budget}k</Typography>
                                 </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
-                </Table>
+                </Table> */}
+
+                {/* <TablePagination/> */}
+
+                <Pagination
+                    count={Math.ceil(products.length / rowsPerPage)}
+                    page={currentPage}
+                    onChange={onPageChange}
+                    size="medium"
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        padding: "15px 0",
+                    }}
+                    renderItem={(products) => (
+                        <PaginationItem {...products} sx={{ fontSize: 12 }} />
+                    )}
+                />
             </Box>
         </DashboardCard>
     );
