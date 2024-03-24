@@ -15,12 +15,23 @@ const Menuitems = [
     navlabel: true,
     subheader: "Home",
   },
-
   {
     id: uniqueId(),
-    title: "Dashboard",
+    title: "서비스 소개",
     icon: IconLayoutDashboard,
     href: "/",
+  },
+  {
+    id: uniqueId(),
+    title: "주식 상장사 검색",
+    icon: IconLayoutDashboard,
+    href: "/search",
+  },
+  {
+    id: uniqueId(),
+    title: "종목 스크리닝",
+    icon: IconLayoutDashboard,
+    href: "/screening",
   },
   {
     navlabel: true,

@@ -9,12 +9,12 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import SearchIcon from '@mui/icons-material/Search';
-import { IconButton, InputBase, TextField } from '@mui/material';
+import InputBase from '@mui/material/InputBase';
+import IconButton from '@mui/material/IconButton';
+import FinanceInfoDialog from './FinanceInfoDialog';
 import useFetch from '@/app/hooks/useFetch';
 
-
 interface StockInfo {
-  id: number;
   name: string;
   stockCd: string;
   corpCd: string;
@@ -22,7 +22,7 @@ interface StockInfo {
 }
 
 interface HeadCell {
-  id: keyof StockInfo;
+  id: string;
   label: string;
 }
 
@@ -37,7 +37,7 @@ const headCells: readonly HeadCell[] = [
   },
   {
     id: 'corpCd',
-    label: '기업코드',
+    label: '전자공시 기업코드',
   },
   {
     id: 'market',
@@ -47,15 +47,26 @@ const headCells: readonly HeadCell[] = [
 
 
 export default function StockInfoTable() {
-  const rows: StockInfo[] = useFetch("http://localhost:3001/stockInfos")
+  const rows: StockInfo[] = useFetch("/stockInfos")
   const [filterdRows, setFilteredRows] = React.useState<StockInfo[]>(rows);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [searched, setSearched] = React.useState<string>("");
+  const [open, setOpen] = React.useState(false);
+  const [selectedStock, setSelectedStock] = React.useState<StockInfo | null>(null);
+
+  const handleClickOpen = (stockInfo: StockInfo) => {
+    setSelectedStock(stockInfo);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   React.useEffect(() => {
     setFilteredRows(rows);
-  },[rows]);
+  }, [rows]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -66,7 +77,7 @@ export default function StockInfoTable() {
     setPage(0);
   };
 
-  const handleSearchInputChange = (event : React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearched(event.target.value);
   }
 
@@ -80,9 +91,10 @@ export default function StockInfoTable() {
     setFilteredRows(filterdRows);
   };
 
+
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filterdRows.length) : 0;
 
   const visibleRows = React.useMemo(
     () =>
@@ -102,7 +114,7 @@ export default function StockInfoTable() {
         <InputBase
           sx={{ ml: 1, flex: 1 }}
           placeholder="종목명 및 코드 검색"
-          inputProps={{ 'aria-label': '목명 및 코드 검색' }}
+          inputProps={{ 'aria-label': '종목명 및 코드 검색' }}
           onChange={handleSearchInputChange}
         />
         <IconButton onClick={() => requestSearch(searched)} type="button" sx={{ p: '10px' }} aria-label="search">
@@ -110,6 +122,8 @@ export default function StockInfoTable() {
         </IconButton>
       </Paper>
       <Paper sx={{ width: '100%', mb: 2 }}>
+
+        <FinanceInfoDialog open={open} onClose={handleClose} stockInfo={selectedStock} startYear={2021} endYear={2023} />
 
         <TableContainer>
           <Table
@@ -135,8 +149,9 @@ export default function StockInfoTable() {
                 return (
                   <TableRow
                     hover
-                    key={row.id}
+                    key={row.stockCd}
                     sx={{ cursor: 'pointer' }}
+                    onClick={() => handleClickOpen(row)}
                   >
                     <TableCell align="center">{row.name}</TableCell>
                     <TableCell align="center">{row.stockCd}</TableCell>
@@ -160,7 +175,7 @@ export default function StockInfoTable() {
         <TablePagination
           rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"
-          count={rows.length}
+          count={filterdRows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
