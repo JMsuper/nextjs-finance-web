@@ -70,7 +70,7 @@ export default function FinanceInfoDialog({ open, onClose, stockInfo, startYear,
   useEffect(() => {
     let isMounted = true; // 마운트 상태 추적
 
-    const url = `/financeInfo/${stockInfo?.stockCd}?startYear=${startYear}&endYear=${endYear}`;
+    const url = `/financeInfo/${stockInfo?.corpCd}?startYear=${startYear}&endYear=${endYear}`;
 
     const fetchData = async () => {
       try {

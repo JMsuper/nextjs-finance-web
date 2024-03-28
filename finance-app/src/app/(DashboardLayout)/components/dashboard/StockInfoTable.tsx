@@ -13,12 +13,22 @@ import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import FinanceInfoDialog from './FinanceInfoDialog';
 import useFetch from '@/app/hooks/useFetch';
+import { TextField, Container } from '@mui/material';
+
+interface StockPriceInfo {
+  closingPrice: number;
+  difference: number;
+  fluctuationRate: number;
+  openingPrice: number;
+}
 
 interface StockInfo {
+  searchTime: Date;
   name: string;
   stockCd: string;
   corpCd: string;
   market: string;
+  stockPriceInfo: StockPriceInfo;
 }
 
 interface HeadCell {
@@ -42,6 +52,19 @@ const headCells: readonly HeadCell[] = [
   {
     id: 'market',
     label: '시장',
+  },
+  {
+    id: 'closingPrice',
+    label: '종가',
+  }, {
+    id: 'difference',
+    label: '전일대비',
+  }, {
+    id: 'fluctuationRate',
+    label: '등락률',
+  }, {
+    id: 'openingPrice',
+    label: '현재가',
   }
 ];
 
@@ -107,20 +130,27 @@ export default function StockInfoTable() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper
-        component="form"
-        sx={{ p: '2px 4px', mb: '10px', display: 'flex', alignItems: 'center', width: 300 }}
-      >
-        <InputBase
-          sx={{ ml: 1, flex: 1 }}
-          placeholder="종목명 및 코드 검색"
-          inputProps={{ 'aria-label': '종목명 및 코드 검색' }}
-          onChange={handleSearchInputChange}
-        />
-        <IconButton onClick={() => requestSearch(searched)} type="button" sx={{ p: '10px' }} aria-label="search">
-          <SearchIcon />
-        </IconButton>
-      </Paper>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Paper
+          component="form"
+          sx={{ p: '2px 4px', mb: '10px', display: 'flex', alignItems: 'center', width: 300 }}
+        >
+          <InputBase
+            sx={{ ml: 1, flex: 1 }}
+            placeholder="종목명 및 코드 검색"
+            inputProps={{ 'aria-label': '종목명 및 코드 검색' }}
+            onChange={handleSearchInputChange}
+          />
+          <IconButton onClick={() => requestSearch(searched)} type="button" sx={{ p: '10px' }} aria-label="search">
+            <SearchIcon />
+          </IconButton>
+        </Paper>
+
+
+        <Container sx={{ textAlign: 'right', alignContent: 'space-evenly' }}>
+          <span style={{fontSize: '12px'}}>조회 시점 : {rows[0]?.searchTime.toLocaleString()}</span>
+        </Container>
+      </Box>
       <Paper sx={{ width: '100%', mb: 2 }}>
 
         <FinanceInfoDialog open={open} onClose={handleClose} stockInfo={selectedStock} startYear={2021} endYear={2023} />
@@ -146,6 +176,7 @@ export default function StockInfoTable() {
 
             <TableBody>
               {visibleRows.map((row, index) => {
+                var textColor = row.stockPriceInfo.difference > 0 ? 'red' : row.stockPriceInfo.difference === 0 ? 'black' : 'blue';
                 return (
                   <TableRow
                     hover
@@ -157,6 +188,11 @@ export default function StockInfoTable() {
                     <TableCell align="center">{row.stockCd}</TableCell>
                     <TableCell align="center">{row.corpCd}</TableCell>
                     <TableCell align="center">{row.market}</TableCell>
+                    <TableCell align="center">{row.stockPriceInfo.closingPrice.toLocaleString()}</TableCell>
+                    <TableCell style={{ color: textColor }} align="center">{row.stockPriceInfo.difference.toLocaleString()}</TableCell>
+                    <TableCell style={{ color: textColor }} align="center">{row.stockPriceInfo.fluctuationRate}</TableCell>
+                    <TableCell align="center">{row.stockPriceInfo.openingPrice.toLocaleString()}</TableCell>
+
                   </TableRow>
                 );
               })}
@@ -166,7 +202,7 @@ export default function StockInfoTable() {
                     height: 53 * emptyRows,
                   }}
                 >
-                  <TableCell colSpan={6} />
+                  <TableCell colSpan={7} />
                 </TableRow>
               )}
             </TableBody>
