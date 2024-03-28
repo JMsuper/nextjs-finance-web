@@ -2,19 +2,18 @@
 import { Typography } from '@mui/material';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
+import ScreeningLayout from '../components/screening/ScreeningLayout';
 
 
-const ScreeingPage = () => {
+const ScreeningPage = () => {
   return (
-    <PageContainer title="종목 스크리닝 5단계" description="종목 스크리닝 5단계">
-      <DashboardCard title="종목 스크리닝 5단계">
+    <PageContainer title="눈덩이 주식 투자법 4단계" description="눈덩이 주식 투자법 4단계">
         
+      <ScreeningLayout></ScreeningLayout>
 
-
-      </DashboardCard>
     </PageContainer>
   );
 };
 
-export default ScreeingPage;
+export default ScreeningPage;
 

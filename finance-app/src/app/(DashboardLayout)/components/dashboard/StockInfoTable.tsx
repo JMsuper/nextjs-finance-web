@@ -64,7 +64,7 @@ const headCells: readonly HeadCell[] = [
     label: '등락률',
   }, {
     id: 'openingPrice',
-    label: '현재가',
+    label: '시가',
   }
 ];
 
@@ -105,12 +105,11 @@ export default function StockInfoTable() {
   }
 
   const requestSearch = (searchedVal: string): void => {
-    console.log(searchedVal)
     const filterdRows = rows.filter((row) => {
       return row.name.includes(searchedVal) || row.stockCd.includes(searchedVal)
         || row.corpCd.includes(searchedVal) || row.market.includes(searchedVal);
     });
-    console.log(filterdRows);
+    setPage(0);
     setFilteredRows(filterdRows);
   };
 
