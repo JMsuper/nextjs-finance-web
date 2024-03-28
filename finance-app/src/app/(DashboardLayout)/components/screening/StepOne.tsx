@@ -4,22 +4,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { StockFinanceInfo } from './StockFinanceInfo';
 
-// interface FinanceInfo {
-//     year: number;
-//     fsDiv: string;
-//     totalAsset: number;
-//     totalLiabilities: number;
-//     totalCapital: number;
-//     netIncome: number;
-// }
-
-// interface StockFinanceInfo {
-//     stockName: string
-//     stockCd: string;
-//     shares: number;
-//     financeInfoList: FinanceInfo[];
-// }
-
 interface HeadCell {
     id: string;
     label: string;
@@ -49,7 +33,7 @@ interface StepOneProps {
     rows: StockFinanceInfo[];
 }
 
-const StepOne: React.FC<StepOneProps> = ({rows}) => {
+const StepOne: React.FC<StepOneProps> = ({ rows }) => {
 
     // const rows: StockFinanceInfo[] = useFetch('/screening/step1');
 
@@ -71,7 +55,7 @@ const StepOne: React.FC<StepOneProps> = ({rows}) => {
     }, [filteredRows, page, rowsPerPage]);
 
     const calculateAllBPS = () => {
-        if(isCalculated) {
+        if (isCalculated) {
             alert('이미 계산되었습니다.');
             return;
         }
@@ -91,10 +75,14 @@ const StepOne: React.FC<StepOneProps> = ({rows}) => {
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
-      };
+    };
 
     return (
         <Box sx={{ width: '100%' }}>
+            <div>
+                현재의 주당순자산가치를 확인한다.<br></br>
+                주당순자산가치 = 자본총계 / 총방행주식수
+            </div>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Paper
                     component="form"
@@ -111,11 +99,11 @@ const StepOne: React.FC<StepOneProps> = ({rows}) => {
                     </IconButton>
                 </Paper>
                 <Button
-                  color="primary"
+                    color="primary"
                     variant="contained"
                     onClick={() => calculateAllBPS()}
                 >
-                  BPS 계산하기
+                    BPS 계산하기
                 </Button>
             </Box>
             <TableContainer>
@@ -162,6 +150,7 @@ const StepOne: React.FC<StepOneProps> = ({rows}) => {
                 page={page}
                 onPageChange={handleChangePage}
                 labelRowsPerPage='페이지당 줄수'
+                rowsPerPageOptions={[]}
                 showFirstButton={true}
                 showLastButton={true}
             />
