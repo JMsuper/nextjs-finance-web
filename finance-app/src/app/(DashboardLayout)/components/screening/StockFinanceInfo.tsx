@@ -5,6 +5,7 @@ export interface FinanceInfo {
     totalLiabilities: number;
     totalCapital: number;
     netIncome: number;
+    roe: number;
 }
 
 export interface StockFinanceInfo {
@@ -12,5 +13,8 @@ export interface StockFinanceInfo {
     stockCd: string;
     shares: number;
     bps: number;
+    threeYearROEAvg: number;
+    tenYearFutureValue: number;
+    expectedReturn: number;
     financeInfoList: FinanceInfo[];
 }
