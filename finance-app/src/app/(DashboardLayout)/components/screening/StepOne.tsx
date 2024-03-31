@@ -1,6 +1,6 @@
 import useFetch from '@/app/hooks/useFetch';
-import { Box, Checkbox, IconButton, InputBase, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Button } from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
+import { Box, Checkbox, Container, IconButton, InputBase, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material';
+import React, { useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { StockFinanceInfo } from './StockFinanceInfo';
 
@@ -13,38 +13,44 @@ const headCells: readonly HeadCell[] = [
     {
         id: 'name',
         label: '종목명',
-    },
-    {
+    }, {
         id: 'stockCd',
         label: '종목코드',
+    }, {
+        id: '2023-totalAsset',
+        label: '총자산(2023)',
+    }, {
+        id: '2023-totalLiabilities',
+        label: '총부채(2023)',
     }, {
         id: '2023-totalCapital',
         label: '자본총계(2023)',
     }, {
-        id: 'shares',
-        label: '(현시점) 총 주식수',
+        id: '2023-netIncome',
+        label: '당기순이익(2023)',
     }, {
-        id: 'BPS',
-        label: '주당순자산 (BPS)',
+        id: 'fsDiv',
+        label: '재무제표 구분',
     }
 ];
 
 interface StepOneProps {
     rows: StockFinanceInfo[];
+    selected: string[];
+    setSelected: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const StepOne: React.FC<StepOneProps> = ({ rows }) => {
+const StepOne: React.FC<StepOneProps> = ({ rows, selected, setSelected }) => {
 
-    // const rows: StockFinanceInfo[] = useFetch('/screening/step1');
+    // State for selected rows, filter, page, and rows per page
 
     const [filter, setFilter] = useState('');
     const [page, setPage] = useState(0);
-    const [isCalculated, setIsCalculated] = useState(false);
-    const rowsPerPage = 8;
+    const rowsPerPage = 6;
 
-    useEffect(() => {
-        setIsCalculated(false);
-    }, [rows]);
+    const selectedRowsCount = useMemo(() => {
+        return selected.length;
+    }, [selected]);
 
     const filteredRows = useMemo(() => {
         return rows.filter(row => row.stockName.includes(filter) || row.stockCd.includes(filter));
@@ -54,39 +60,47 @@ const StepOne: React.FC<StepOneProps> = ({ rows }) => {
         return filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
     }, [filteredRows, page, rowsPerPage]);
 
-    const calculateAllBPS = () => {
-        if (isCalculated) {
-            alert('이미 계산되었습니다.');
-            return;
-        }
-        alert('선택된 종목들의 BPS를 계산합니다.');
-        rows.forEach((stock) => {
-            stock.bps = calculateBPS(stock);
-        });
-        setIsCalculated(true);
-    }
-
-    const calculateBPS = (stock: StockFinanceInfo) => {
-        const totalCapital = stock.financeInfoList.filter((financeInfo) => financeInfo.year === 2023)[0].totalCapital;
-        const shares = stock.shares;
-        return Math.round(totalCapital / shares);
-    }
-
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
     };
 
+    const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.checked) {
+            const newSelecteds = rows.map((n) => n.stockName);
+            setSelected(newSelecteds);
+            return;
+        }
+        setSelected([]);
+    };
+
+    const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+        const selectedIndex = selected.indexOf(name);
+        let newSelected: string[] = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selected, name);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selected.slice(1));
+        } else if (selectedIndex === selected.length - 1) {
+            newSelected = newSelected.concat(selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selected.slice(0, selectedIndex),
+                selected.slice(selectedIndex + 1),
+            );
+        }
+
+        setSelected(newSelected);
+    };
+
     return (
         <Box sx={{ width: '100%' }}>
-            <div>
-                현재의 주당순자산가치를 확인한다.<br></br>
-                주당순자산가치 = 자본총계 / 총방행주식수
-            </div>
+            <Typography variant="h6" sx={{ color: (theme) => theme.palette.primary.main }}>스크리닝 대상 종목 선정</Typography>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Paper
                     component="form"
-                    sx={{ p: '2px 4px', mb: '10px', display: 'flex', alignItems: 'center', width: 300 }}
+                    sx={{ p: '2px 4px', mb: '2px', display: 'flex', alignItems: 'center', width: 300 }}
                 >
                     <InputBase
                         sx={{ ml: 1, flex: 1 }}
@@ -98,13 +112,10 @@ const StepOne: React.FC<StepOneProps> = ({ rows }) => {
                         <SearchIcon />
                     </IconButton>
                 </Paper>
-                <Button
-                    color="primary"
-                    variant="contained"
-                    onClick={() => calculateAllBPS()}
-                >
-                    BPS 계산하기
-                </Button>
+
+                <Container sx={{ textAlign: 'right', alignContent: 'space-evenly' }}>
+                    <Typography variant="body1" sx={{ color: (theme) => theme.palette.primary.main }}>선택된 종목 수 : {selected.length}</Typography>
+                </Container>
             </Box>
             <TableContainer>
                 <Table
@@ -113,6 +124,13 @@ const StepOne: React.FC<StepOneProps> = ({ rows }) => {
                 >
                     <TableHead>
                         <TableRow>
+                            <TableCell padding="checkbox">
+                                <Checkbox
+                                    indeterminate={selected.length > 0 && selected.length < rows.length}
+                                    checked={rows.length > 0 && selected.length === rows.length}
+                                    onChange={handleSelectAllClick}
+                                />
+                            </TableCell>
                             {headCells.map((headCell) => (
                                 <TableCell
                                     key={headCell.id}
@@ -127,16 +145,23 @@ const StepOne: React.FC<StepOneProps> = ({ rows }) => {
 
                     <TableBody>
                         {visibleRows.map((row, index) => {
+                            const isItemSelected = selected.indexOf(row.stockName) !== -1;
                             return (
                                 <TableRow
                                     key={row.stockName}
+                                    selected={isItemSelected}
+                                    onClick={(event) => handleClick(event, row.stockName)}
                                 >
+                                    <TableCell padding="checkbox">
+                                        <Checkbox checked={isItemSelected} />
+                                    </TableCell>
                                     <TableCell align="center">{row.stockName}</TableCell>
                                     <TableCell align="center">{row.stockCd}</TableCell>
+                                    <TableCell align="center">{row.financeInfoList.filter((financeInfo) => financeInfo.year === 2023)[0].totalAsset.toLocaleString()} 원</TableCell>
+                                    <TableCell align="center">{row.financeInfoList.filter((financeInfo) => financeInfo.year === 2023)[0].totalLiabilities.toLocaleString()} 원</TableCell>
                                     <TableCell align="center">{row.financeInfoList.filter((financeInfo) => financeInfo.year === 2023)[0].totalCapital.toLocaleString()} 원</TableCell>
-                                    <TableCell align="center">{row.shares.toLocaleString()} 주</TableCell>
-                                    <TableCell align="center">{row.bps ? row.bps : "?"}</TableCell>
-
+                                    <TableCell align="center">{row.financeInfoList.filter((financeInfo) => financeInfo.year === 2023)[0].netIncome.toLocaleString()} 원</TableCell>
+                                    <TableCell align="center">{row.financeInfoList[0].fsDiv}</TableCell>
                                 </TableRow>
                             );
                         })}
@@ -149,7 +174,6 @@ const StepOne: React.FC<StepOneProps> = ({ rows }) => {
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
-                labelRowsPerPage='페이지당 줄수'
                 rowsPerPageOptions={[]}
                 showFirstButton={true}
                 showLastButton={true}

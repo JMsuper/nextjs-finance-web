@@ -9,6 +9,11 @@ interface HeadCell {
     label: string;
 }
 
+interface ResponseData {
+    searchTime: string;
+    openingPriceMap: Map<string,number>;
+}
+
 const headCells: readonly HeadCell[] = [
     {
         id: 'name',
@@ -18,29 +23,76 @@ const headCells: readonly HeadCell[] = [
         id: 'stockCd',
         label: '종목코드',
     }, {
-        id: '2023-totalCapital',
-        label: '자본총계(2023)',
-    }, {
-        id: 'shares',
-        label: '(현시점) 총 주식수',
-    }, {
+        id: 'threeYearROEAvg',
+        label: '3개년 ROE 평균',
+    },
+    {
         id: 'BPS',
         label: '주당순자산 (BPS)',
-    }
+    },
+    {
+        id: '10Yr-Future-Value',
+        label: '10년 후 주당순자산 가치',
+    }, {
+        id: 'openingPrice',
+        label: '시가',
+    }, {
+        id: 'Expected-Return',
+        label: '기대수익률',
+    },
 ];
 
-interface StepTwoProps {
+interface StepFiveProps {
     rows: StockFinanceInfo[];
 }
 
-const StepTwo: React.FC<StepTwoProps> = ({ rows }) => {
-
-    // const rows: StockFinanceInfo[] = useFetch('/screening/step1');
-
+const StepFive: React.FC<StepFiveProps> = ({ rows }) => {
     const [filter, setFilter] = useState('');
     const [page, setPage] = useState(0);
     const [isCalculated, setIsCalculated] = useState(false);
     const rowsPerPage = 8;
+    // const [priceData, setPriceData] = useState<ResponseData>();
+    const [searchTime, setSearchTime] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+
+    const fetchData = async () => {
+        const stockCodeList = rows.map(row => row.stockCd);
+
+        const url = '/screening/step5';
+        const body = JSON.stringify({ stockCodeList });
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body,
+        };
+
+
+        const response = await fetch(url, options);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data: ResponseData = await response.json();
+        data.openingPriceMap = new Map(Object.entries(data.openingPriceMap));
+        setSearchTime(data.searchTime);
+
+        rows.forEach((stock) => {
+            const openingPrice: number | undefined = data.openingPriceMap.get(stock.stockCd);
+            if(openingPrice !== undefined) {
+                stock.openingPrice = openingPrice;
+            };
+        });
+
+        setIsLoading(false);
+    };
+
+    useEffect(() => {
+        fetchData().catch(error => console.error(error));
+    }, []);
+
 
     useEffect(() => {
         setIsCalculated(false);
@@ -54,22 +106,25 @@ const StepTwo: React.FC<StepTwoProps> = ({ rows }) => {
         return filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
     }, [filteredRows, page, rowsPerPage]);
 
-    const calculateAllBPS = () => {
+    const calculateAllFutureValue = () => {
         if (isCalculated) {
             alert('이미 계산되었습니다.');
             return;
         }
-        alert('선택된 종목들의 BPS를 계산합니다.');
+        alert('기대수익률을 계산합니다.');
         rows.forEach((stock) => {
-            stock.bps = calculateBPS(stock);
+            stock.expectedReturn = calculateExpectedReturn(stock);
         });
         setIsCalculated(true);
     }
 
-    const calculateBPS = (stock: StockFinanceInfo) => {
-        const totalCapital = stock.financeInfoList.filter((financeInfo) => financeInfo.year === 2023)[0].totalCapital;
-        const shares = stock.shares;
-        return Math.round(totalCapital / shares);
+    const calculateExpectedReturn = (stock: StockFinanceInfo) => {
+        const openingPrice = stock.openingPrice;
+        
+        if (openingPrice === undefined || openingPrice === 0) {
+            return 0;
+        }
+        return ((stock.tenYearFutureValue / openingPrice) ** (1 / 10)) - 1;
     }
 
 
@@ -77,11 +132,12 @@ const StepTwo: React.FC<StepTwoProps> = ({ rows }) => {
         setPage(newPage);
     };
 
-    return (
+    return isLoading ? <div>Loading...</div> : (
         <Box sx={{ width: '100%' }}>
             <div>
-                현재의 주당순자산가치를 확인한다.<br></br>
-                주당순자산가치 = 자본총계 / 총방행주식수
+                - 현재의 주가를 대입해 기대수익률을 산정한다.<br></br>
+                - 기대수익률 = (10√(‘10년 후 주당순자산가치’ / ‘현재의 주가’)) - 1<br></br>
+                - 산정된 기대수익률이 연 목표수익률을 초과하면 매수한다
             </div>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Paper
@@ -101,11 +157,12 @@ const StepTwo: React.FC<StepTwoProps> = ({ rows }) => {
                 <Button
                     color="primary"
                     variant="contained"
-                    onClick={() => calculateAllBPS()}
+                    onClick={() => calculateAllFutureValue()}
                 >
-                    BPS 계산하기
+                    기대수익률 계산
                 </Button>
             </Box>
+            조회시점 : {searchTime}
             <TableContainer>
                 <Table
                     sx={{ minWidth: 1000 }}
@@ -133,10 +190,11 @@ const StepTwo: React.FC<StepTwoProps> = ({ rows }) => {
                                 >
                                     <TableCell align="center">{row.stockName}</TableCell>
                                     <TableCell align="center">{row.stockCd}</TableCell>
-                                    <TableCell align="center">{row.financeInfoList.filter((financeInfo) => financeInfo.year === 2023)[0].totalCapital.toLocaleString()} 원</TableCell>
-                                    <TableCell align="center">{row.shares.toLocaleString()} 주</TableCell>
-                                    <TableCell align="center">{row.bps ? row.bps.toLocaleString() : "?"}</TableCell>
-
+                                    <TableCell align="center">{row.threeYearROEAvg.toLocaleString()}</TableCell>
+                                    <TableCell align="center">{row.bps.toLocaleString()}</TableCell>
+                                    <TableCell align="center">{row.tenYearFutureValue.toLocaleString()}</TableCell>
+                                    <TableCell align="center">{row.openingPrice.toLocaleString()} 원</TableCell>
+                                    <TableCell align="center">{row.expectedReturn ? (row.expectedReturn * 100).toFixed(2) : 0} %</TableCell>
                                 </TableRow>
                             );
                         })}
@@ -158,4 +216,4 @@ const StepTwo: React.FC<StepTwoProps> = ({ rows }) => {
     );
 };
 
-export default StepTwo;
+export default StepFive;

@@ -15,6 +15,8 @@ export interface StockFinanceInfo {
     bps: number;
     threeYearROEAvg: number;
     tenYearFutureValue: number;
+    openingPrice: number;
     expectedReturn: number;
+    isPropriate: boolean;
     financeInfoList: FinanceInfo[];
 }

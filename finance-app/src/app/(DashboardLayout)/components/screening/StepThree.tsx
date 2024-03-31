@@ -2,42 +2,63 @@ import useFetch from '@/app/hooks/useFetch';
 import { Box, Checkbox, IconButton, InputBase, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Button } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import { StockFinanceInfo } from './StockFinanceInfo';
+import { FinanceInfo, StockFinanceInfo } from './StockFinanceInfo';
 
 interface HeadCell {
     id: string;
     label: string;
 }
 
-const headCells: readonly HeadCell[] = [
-        {
-            id: 'name',
-            label: '종목명',
-        },
-        {
-            id: 'stockCd',
-            label: '종목코드',
-        }, {
-            id: 'BPS',
-            label: '주당순자산 (BPS)',
-        },
-        
-        {
-            id: '2023-ROE',
-            label: 'ROE(2023)',
-        }, {
-            id: '2022-ROE',
-            label: 'ROE(2022)',
-        }, {
-            id: '2021-ROE',
-            label: 'ROE(2021)',
-        },{
-            id: 'Avg-ROE',
-            label: '3개년 ROE 평균'
-        },{
-            id: '10Yr-Future-Value',
-            label: '10년 후 주당순자산 가치',
-        }
+const beforeCalculatedHeadCells: readonly HeadCell[] = [
+    {
+        id: 'name',
+        label: '종목명',
+    },
+    {
+        id: 'stockCd',
+        label: '종목코드',
+    }, {
+        id: '2023-netIncome',
+        label: '당기순이익(2023)',
+    }, {
+        id: '2022-totalCapital',
+        label: '자본총계(2022)',
+    }, {
+        id: '2022-netIncome',
+        label: '당기순이익(2022)',
+    }, {
+        id: '2021-totalCapital',
+        label: '자본총계(2021)',
+    }, {
+        id: '2021-netIncome',
+        label: '당기순이익(2021)',
+    }, {
+        id: '2020-totalCapital',
+        label: '자본총계(2020)',
+    }
+];
+
+const afterCalculatedHeadCells: readonly HeadCell[] = [
+    {
+        id: 'name',
+        label: '종목명',
+    },
+    {
+        id: 'stockCd',
+        label: '종목코드',
+    }, {
+        id: '2023-ROE',
+        label: 'ROE(2023)',
+    }, {
+        id: '2022-ROE',
+        label: 'ROE(2022)',
+    }, {
+        id: '2021-ROE',
+        label: 'ROE(2021)',
+    }, {
+        id: 'Avg-ROE',
+        label: '3개년 ROE 평균'
+    }
 ];
 
 interface StepThreeProps {
@@ -45,8 +66,6 @@ interface StepThreeProps {
 }
 
 const StepThree: React.FC<StepThreeProps> = ({ rows }) => {
-
-    // const rows: StockFinanceInfo[] = useFetch('/screening/step1');
 
     const [filter, setFilter] = useState('');
     const [page, setPage] = useState(0);
@@ -65,24 +84,30 @@ const StepThree: React.FC<StepThreeProps> = ({ rows }) => {
         return filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
     }, [filteredRows, page, rowsPerPage]);
 
-    const calculateAllFutureValue = () => {
+    const calculateAllROE = () => {
         if (isCalculated) {
             alert('이미 계산되었습니다.');
             return;
         }
-        alert('10년 후 주당순자산 가치를 계산합니다.');
+        alert('3개년 ROE를 계산합니다.');
         rows.forEach((stock) => {
-            stock.tenYearFutureValue = calculateFutureValue(stock);
-            console.log(stock.tenYearFutureValue);
+            var threeYearROEAvg = 0;
+            for (let i = 0; i < 3; i++) {
+                const thisYearfinaneInfo = stock.financeInfoList[i];
+                const beforeYearfinaneInfo = stock.financeInfoList[i + 1];
+
+                const netIncome = thisYearfinaneInfo.netIncome;
+                const totalCapital = beforeYearfinaneInfo.totalCapital;
+
+                const roe = netIncome / totalCapital;
+                thisYearfinaneInfo.roe = roe;
+                threeYearROEAvg += roe;
+            }
+            threeYearROEAvg = threeYearROEAvg / 3;
+            stock.threeYearROEAvg = threeYearROEAvg;
         });
         setIsCalculated(true);
     }
-
-    const calculateFutureValue = (stock: StockFinanceInfo) => {
-        console.log(stock.bps, stock.threeYearROEAvg);
-        return stock.bps * Math.pow(1 + stock.threeYearROEAvg, 10);
-    }
-
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -91,8 +116,9 @@ const StepThree: React.FC<StepThreeProps> = ({ rows }) => {
     return (
         <Box sx={{ width: '100%' }}>
             <div>
-            현재 주당순자산가치에서 예상 ROE를 적용해 미래 주당순자산가치를 산정한다.<br></br>
-            10년 후 주당순자산가치 = 현재 주당순자산가치 * (1 + 예상 ROE)^10
+                미래가치를 측정하기 위한 ROE수익률을 예측한다<br></br>
+                ROE = 금년 순이익 / 전년도 순자산<br></br>
+                최근 3개년 ROE 평균을 향후 10년간의 예상 ROE 수치의 기준으로 사용한다.<br></br>
             </div>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Paper
@@ -112,9 +138,9 @@ const StepThree: React.FC<StepThreeProps> = ({ rows }) => {
                 <Button
                     color="primary"
                     variant="contained"
-                    onClick={() => calculateAllFutureValue()}
+                    onClick={() => calculateAllROE()}
                 >
-                    10년 후 미래가치 계산하기
+                    ROE 계산하기
                 </Button>
             </Box>
             <TableContainer>
@@ -122,37 +148,82 @@ const StepThree: React.FC<StepThreeProps> = ({ rows }) => {
                     sx={{ minWidth: 1000 }}
                     aria-labelledby="tableTitle"
                 >
-                    <TableHead>
-                        <TableRow>
-                            {headCells.map((headCell) => (
-                                <TableCell
-                                    key={headCell.id}
-                                    align='center'
-                                    padding='normal'
-                                >
-                                    {headCell.label}
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    </TableHead>
-
+                    {
+                        isCalculated === false ? (
+                            <TableHead>
+                                <TableRow>
+                                    {beforeCalculatedHeadCells.map((headCell) => (
+                                        <TableCell
+                                            key={headCell.id}
+                                            align='center'
+                                            padding='normal'
+                                        >
+                                            {headCell.label}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            </TableHead>
+                        ) : (
+                            <TableHead>
+                                <TableRow>
+                                    {afterCalculatedHeadCells.map((headCell) => (
+                                        <TableCell
+                                            key={headCell.id}
+                                            align='center'
+                                            padding='normal'
+                                        >
+                                            {headCell.label}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            </TableHead>
+                        )
+                    }
                     <TableBody>
                         {visibleRows.map((row, index) => {
-                            return (
-                                <TableRow
-                                    key={row.stockName}
-                                >
-                                    <TableCell align="center">{row.stockName}</TableCell>
-                                    <TableCell align="center">{row.stockCd}</TableCell>
-                                    <TableCell align="center">{row.bps}</TableCell>
-                                    <TableCell align="center">{row.financeInfoList.filter((financeInfo) => financeInfo.year === 2023)[0].roe.toLocaleString()}</TableCell>
-                                    <TableCell align="center">{row.financeInfoList.filter((financeInfo) => financeInfo.year === 2022)[0].roe.toLocaleString()}</TableCell>
-                                    <TableCell align="center">{row.financeInfoList.filter((financeInfo) => financeInfo.year === 2021)[0].roe.toLocaleString()}</TableCell>
-                                    <TableCell align="center">{row.threeYearROEAvg.toLocaleString()}</TableCell>
-                                    <TableCell align="center">{row.tenYearFutureValue ? row.tenYearFutureValue.toLocaleString() : "?"}</TableCell>
+                            if (isCalculated === false) {
+                                const netIncome_2023 = row.financeInfoList.filter((financeInfo) => financeInfo.year === 2023)[0].netIncome;
+                                const totalCapital_2022 = row.financeInfoList.filter((financeInfo) => financeInfo.year === 2022)[0].totalCapital;
+                                const netIncome_2022 = row.financeInfoList.filter((financeInfo) => financeInfo.year === 2022)[0].netIncome;
+                                const totalCapital_2021 = row.financeInfoList.filter((financeInfo) => financeInfo.year === 2021)[0].totalCapital;
+                                const netIncome_2021 = row.financeInfoList.filter((financeInfo) => financeInfo.year === 2021)[0].netIncome;
+                                const totalCapital_2020 = row.financeInfoList.filter((financeInfo) => financeInfo.year === 2020)[0].totalCapital;
 
-                                </TableRow>
-                            );
+                                return (
+                                    <TableRow
+                                        key={row.stockName}
+                                    >
+
+                                        <TableCell align="center">{row.stockName}</TableCell>
+                                        <TableCell align="center">{row.stockCd}</TableCell>
+                                        <TableCell align="center">{netIncome_2023.toLocaleString().slice(0, -4)} 천원</TableCell>
+                                        <TableCell align="center">{totalCapital_2022.toLocaleString().slice(0, -4)} 천원</TableCell>
+                                        <TableCell align="center">{netIncome_2022.toLocaleString().slice(0, -4)} 천원</TableCell>
+                                        <TableCell align="center">{totalCapital_2021.toLocaleString().slice(0, -4)} 천원</TableCell>
+                                        <TableCell align="center">{netIncome_2021.toLocaleString().slice(0, -4)} 천원</TableCell>
+                                        <TableCell align="center">{totalCapital_2020.toLocaleString().slice(0, -4)} 천원</TableCell>
+                                    </TableRow>
+                                );
+                            } else {
+                                const roe_2023 = row.financeInfoList.filter((financeInfo) => financeInfo.year === 2023)[0].roe;
+                                const roe_2022 = row.financeInfoList.filter((financeInfo) => financeInfo.year === 2022)[0].roe;
+                                const roe_2021 = row.financeInfoList.filter((financeInfo) => financeInfo.year === 2021)[0].roe;
+
+                                return (
+                                    <TableRow
+                                        key={row.stockName}
+                                    >   
+                                    
+                                        <TableCell align="center">{row.stockName}</TableCell>
+                                        <TableCell align="center">{row.stockCd}</TableCell>
+                                        
+                                        <TableCell align="center">{roe_2023.toLocaleString()}</TableCell>
+                                        <TableCell align="center">{roe_2022.toLocaleString()}</TableCell>
+                                        <TableCell align="center">{roe_2021.toLocaleString()}</TableCell>
+                                        <TableCell align="center">{row.threeYearROEAvg.toLocaleString()}</TableCell>
+                                    </TableRow>
+                                );
+                            }
                         })}
                     </TableBody>
                 </Table>
@@ -164,7 +235,6 @@ const StepThree: React.FC<StepThreeProps> = ({ rows }) => {
                 page={page}
                 onPageChange={handleChangePage}
                 labelRowsPerPage='페이지당 줄수'
-                rowsPerPageOptions={[]}
                 showFirstButton={true}
                 showLastButton={true}
             />

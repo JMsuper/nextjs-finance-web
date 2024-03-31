@@ -3,47 +3,42 @@ import { Box, Checkbox, IconButton, InputBase, Paper, Table, TableBody, TableCel
 import React, { useEffect, useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { StockFinanceInfo } from './StockFinanceInfo';
+import { getDecorators } from 'typescript';
 
 interface HeadCell {
     id: string;
     label: string;
 }
 
-interface OpeningPriceMap {
-    [key: string]: number;
-}
-
-interface ResponseData {
-    searchTime: string;
-    openingPriceMap: OpeningPriceMap;
-}
-
 const headCells: readonly HeadCell[] = [
-    {
-        id: 'name',
-        label: '종목명',
-    },
-    {
-        id: 'stockCd',
-        label: '종목코드',
-    }, {
-        id: 'threeYearROEAvg',
-        label: '3개년 ROE 평균',
-    },
-    {
-        id: 'BPS',
-        label: '주당순자산 (BPS)',
-    },
-    {
-        id: '10Yr-Future-Value',
-        label: '10년 후 주당순자산 가치',
-    }, {
-        id: 'openingPrice',
-        label: '시가',
-    }, {
-        id: 'Expected-Return',
-        label: '기대수익률',
-    },
+        {
+            id: 'name',
+            label: '종목명',
+        },
+        {
+            id: 'stockCd',
+            label: '종목코드',
+        }, {
+            id: 'BPS',
+            label: '주당순자산 (BPS)',
+        },
+        
+        {
+            id: '2023-ROE',
+            label: 'ROE(2023)',
+        }, {
+            id: '2022-ROE',
+            label: 'ROE(2022)',
+        }, {
+            id: '2021-ROE',
+            label: 'ROE(2021)',
+        },{
+            id: 'Avg-ROE',
+            label: '3개년 ROE 평균'
+        },{
+            id: '10Yr-Future-Value',
+            label: '10년 후 주당순자산 가치',
+        }
 ];
 
 interface StepFourProps {
@@ -51,45 +46,13 @@ interface StepFourProps {
 }
 
 const StepFour: React.FC<StepFourProps> = ({ rows }) => {
+
+    // const rows: StockFinanceInfo[] = useFetch('/screening/step1');
+
     const [filter, setFilter] = useState('');
     const [page, setPage] = useState(0);
     const [isCalculated, setIsCalculated] = useState(false);
     const rowsPerPage = 8;
-    const [priceData, setPriceData] = useState<ResponseData>();
-    const [isLoading, setIsLoading] = useState(true);
-
-    const fetchData = async () => {
-        const stockCodeList = rows.map(row => row.stockCd);
-
-        const url = '/screening/step5';
-        const body = JSON.stringify({ stockCodeList });
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body,
-        };
-
-        console.log(`Making a ${options.method} request to ${url} with body: ${body}`);
-
-        const response = await fetch(url, options);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setPriceData(data);
-
-        setIsLoading(false);
-        console.log(data, isLoading)
-    };
-
-    useEffect(() => {
-        fetchData().catch(error => console.error(error));
-    }, []);
-
 
     useEffect(() => {
         setIsCalculated(false);
@@ -108,20 +71,15 @@ const StepFour: React.FC<StepFourProps> = ({ rows }) => {
             alert('이미 계산되었습니다.');
             return;
         }
-        alert('기대수익률을 계산합니다.');
+        alert('10년 후 주당순자산 가치를 계산합니다.');
         rows.forEach((stock) => {
-            stock.expectedReturn = calculateExpectedReturn(stock);
+            stock.tenYearFutureValue = calculateFutureValue(stock);
         });
         setIsCalculated(true);
     }
 
-    const calculateExpectedReturn = (stock: StockFinanceInfo) => {
-        const openingPrice = priceData?.openingPriceMap[stock.stockCd];
-        if (openingPrice === undefined) {
-            return 0;
-        }
-        console.log(stock.tenYearFutureValue / openingPrice, (stock.tenYearFutureValue / openingPrice) ** (1 / 10));
-        return ((stock.tenYearFutureValue / openingPrice) ** (1 / 10)) - 1;
+    const calculateFutureValue = (stock: StockFinanceInfo) => {
+        return Math.round(stock.bps * Math.pow(1 + stock.threeYearROEAvg, 10));
     }
 
 
@@ -129,12 +87,11 @@ const StepFour: React.FC<StepFourProps> = ({ rows }) => {
         setPage(newPage);
     };
 
-    return isLoading ? <div>Loading...</div> : (
+    return (
         <Box sx={{ width: '100%' }}>
             <div>
-                - 현재의 주가를 대입해 기대수익률을 산정한다.<br></br>
-                - 기대수익률 = (10√(‘10년 후 주당순자산가치’ / ‘현재의 주가’)) - 1<br></br>
-                - 산정된 기대수익률이 연 목표수익률을 초과하면 매수한다
+            현재 주당순자산가치에서 예상 ROE를 적용해 미래 주당순자산가치를 산정한다.<br></br>
+            10년 후 주당순자산가치 = 현재 주당순자산가치 * (1 + 예상 ROE)^10
             </div>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Paper
@@ -156,10 +113,9 @@ const StepFour: React.FC<StepFourProps> = ({ rows }) => {
                     variant="contained"
                     onClick={() => calculateAllFutureValue()}
                 >
-                    기대수익률 계산
+                    10년 후 미래가치 계산하기
                 </Button>
             </Box>
-            조회시점 : {priceData?.searchTime}
             <TableContainer>
                 <Table
                     sx={{ minWidth: 1000 }}
@@ -181,17 +137,32 @@ const StepFour: React.FC<StepFourProps> = ({ rows }) => {
 
                     <TableBody>
                         {visibleRows.map((row, index) => {
+                            const roe_2023 = row.financeInfoList.filter((financeInfo) => financeInfo.year === 2023)[0].roe;
+                            const roe_2022 = row.financeInfoList.filter((financeInfo) => financeInfo.year === 2022)[0].roe;
+                            const roe_2021 = row.financeInfoList.filter((financeInfo) => financeInfo.year === 2021)[0].roe;
+
+                            const getDifference = (roe_x: number, roe_y: number) => {
+                                var difference = roe_x - roe_y;
+                                if(difference > 0) {
+                                    return (<span style={{color : 'red'}}>(+{difference.toLocaleString()})</span>);
+                                }else{
+                                    return (<span style={{color : 'blue'}}>({difference.toLocaleString()})</span>);
+                                }
+                            }
+
                             return (
                                 <TableRow
                                     key={row.stockName}
                                 >
                                     <TableCell align="center">{row.stockName}</TableCell>
                                     <TableCell align="center">{row.stockCd}</TableCell>
+                                    <TableCell align="center">{row.bps}</TableCell>
+                                    <TableCell align="center">{roe_2023.toLocaleString()} {getDifference(roe_2023,roe_2022)}</TableCell>
+                                    <TableCell align="center">{roe_2022.toLocaleString()} {getDifference(roe_2022,roe_2021)}</TableCell>
+                                    <TableCell align="center">{roe_2021.toLocaleString()}</TableCell>
                                     <TableCell align="center">{row.threeYearROEAvg.toLocaleString()}</TableCell>
-                                    <TableCell align="center">{row.bps.toLocaleString()}</TableCell>
-                                    <TableCell align="center">{row.tenYearFutureValue.toLocaleString()}</TableCell>
-                                    <TableCell align="center">{priceData?.openingPriceMap[row.stockCd].toLocaleString()}</TableCell>
-                                    <TableCell align="center">{row.expectedReturn}</TableCell>
+                                    <TableCell align="center">{row.tenYearFutureValue ? row.tenYearFutureValue.toLocaleString() : "?"}</TableCell>
+
                                 </TableRow>
                             );
                         })}

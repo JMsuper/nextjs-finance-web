@@ -2,33 +2,18 @@
 
 import { Stepper, Step, StepLabel, Button } from '@mui/material';
 import { useEffect, useState } from 'react';
+
+import DashboardCard from '../shared/DashboardCard';
+import useFetch from '@/app/hooks/useFetch';
+import { StockFinanceInfo } from './StockFinanceInfo';
 import StepOne from './StepOne';
 import StepTwo from './StepTwo';
 import StepThree from './StepThree';
 import StepFour from './StepFour';
-import StepZero from './StepZero';
-import DashboardCard from '../shared/DashboardCard';
-import useFetch from '@/app/hooks/useFetch';
-import { StockFinanceInfo } from './StockFinanceInfo';
+import StepFive from './StepFive';
+import StepSix from './StepSix';
 
-// const StepThreePart = () => {
-//     // Implement the Future Value Estimation Tool here
-//     return <div>- 현재 주당순자산가치에서 예상 ROE를 적용해 미래 주당순자산가치를 산정한다.<br></br>
-//         - 10년 후 주당순자산가치 = 현재 주당순자산가치 * (1 + 예상 ROE)^10
-//         <StepThree></StepThree>
-//     </div>;
-// };
-
-// const StepFourPart = () => {
-//     // Implement the tool for calculating expected returns here
-//     return <div>- 현재의 주가를 대입해 기대수익률을 산정한다.<br></br>
-//         - 기대수익률 = (10√(‘10년 후 주당순자산가치’ / ‘현재의 주가’)) - 1<br></br>
-//         - 산정된 기대수익률이 연 목표수익률을 초과하면 매수한다
-//         <StepFour></StepFour>
-//     </div>;
-// };
-
-const steps = ['0단계 : 대상종목 선정','1단계 : 현재가치 확인', '2단계 : 미래수익률 예측', '3단계 : 미래가치 산정', '4단계 : 기대수익률 산정'];
+const steps = ['1단계 : 대상종목 선정', '2단계 : 현재가치 확인', '3단계 : 미래수익률 예측', '4단계 : 미래가치 산정', '5단계 : 기대수익률 산정', '6단계 : 종목 선정'];
 
 const ScreeningLayout = () => {
     const [activeStep, setActiveStep] = useState(0);
@@ -40,9 +25,9 @@ const ScreeningLayout = () => {
     const [selected, setSelected] = useState<string[]>([]);
 
     useEffect(() => {
-            const newSelectedRows:StockFinanceInfo[] = [];
-            rows.filter((row) => selected.includes(row.stockName)).map((row) => newSelectedRows.push(row));
-            setSelectedRows(newSelectedRows);
+        const newSelectedRows: StockFinanceInfo[] = [];
+        rows.filter((row) => selected.includes(row.stockName)).map((row) => newSelectedRows.push(row));
+        setSelectedRows(newSelectedRows);
     }, [selected, rows]);
 
     const handleNext = () => {
@@ -50,7 +35,7 @@ const ScreeningLayout = () => {
             return;
         }
 
-        if(selected.length === 0 && activeStep === 0 ){
+        if (selected.length === 0 && activeStep === 0) {
             alert('종목을 선택해주세요.');
             return;
         }
@@ -76,15 +61,17 @@ const ScreeningLayout = () => {
     const getStepContent = (step: number) => {
         switch (step) {
             case 0:
-                return <StepZero rows={rows} selected={selected} setSelected={setSelected} />
+                return <StepOne rows={rows} selected={selected} setSelected={setSelected} />
             case 1:
-                return <StepOne rows={selectedRows}/>;
+                return <StepTwo rows={selectedRows} />;
             case 2:
-                return <StepTwo rows={selectedRows}/>;
-            case 3:
                 return <StepThree rows={selectedRows} />;
-            case 4:
+            case 3:
                 return <StepFour rows={selectedRows} />;
+            case 4:
+                return <StepFive rows={selectedRows} />;
+            case 5:
+                return <StepSix rows={selectedRows} />;
             default:
                 return (<div></div>)
         }
