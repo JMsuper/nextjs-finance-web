@@ -79,7 +79,7 @@ const ScreeningLayout = () => {
 
     return (
         <div>
-            <Stepper activeStep={activeStep}>
+            <Stepper activeStep={activeStep} sx={{pb:4}}>
                 {steps.map((label, index) => (
                     <Step key={label} completed={completed.has(index)}>
                         <StepLabel>{label}</StepLabel>

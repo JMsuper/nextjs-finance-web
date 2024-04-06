@@ -1,5 +1,5 @@
 import useFetch from '@/app/hooks/useFetch';
-import { Box, Checkbox, IconButton, InputBase, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Button, TextField, Select, MenuItem, RadioGroup, FormControlLabel, Radio, Grid, Stack, Switch, Typography, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import { Box, Checkbox, IconButton, InputBase, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Button, TextField, Select, MenuItem, RadioGroup, FormControlLabel, Radio, Grid, Stack, Switch, Typography, ToggleButtonGroup, ToggleButton, Divider } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { StockFinanceInfo } from './StockFinanceInfo';
@@ -16,6 +16,20 @@ import styled from '@emotion/styled';
 
 // 4. 필립 피셔형 눈덩이주식 필터링
 // 예상 ROE > 목표수익률, 현 순자산가치 < 현 가격
+
+
+// TODO
+// 1. 옵션과 조건 사이에 Divider 추가(O)
+// 2. 필터링 옵션에 따른 조건 설정 변경 기능 구현(O)
+// 3. 필터링 옵션에 따른, 조건 활성화/비활성화 기능 구현(O)
+
+// 4. 필터링 로직 구현(O)
+// 5. 필터링 결과에 따른 테이블 데이터 출력(O)
+// 6. 필터링 결과에 따른 테이블 데이터 저장 기능 구현
+
+// 7. 테이블 정렬 기능 구현
+// 8. '필터링 결과' 컬럼 적합/부적합 표출 필터링 로직 구현
+
 
 
 interface HeadCell {
@@ -80,38 +94,69 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
     const [conditionOne, setConditionOne] = useState(">");
     const [conditionTwo, setConditionTwo] = useState(">");
 
+    // 토글 조건 스위칭 on/off 상태값
+    const [toggleConditionOne, setToggleConditionOne] = useState(false);
+    const [toggleConditionTwo, setToggleConditionTwo] = useState(false);
+    const [toggleConditionThree, setToggleConditionThree] = useState(false);
+
+    // 토글 고정 on/off 상태값
+    const [toggleFix, setToggleFix] = useState(true);
+
+
     const changeConditionOne = () => {
-        if(conditionOne === ">"){
+        if (conditionOne === ">") {
             setConditionOne("<");
-        }else{
+        } else {
             setConditionOne(">");
         }
     };
 
     const changeConditionTwo = () => {
-        if(conditionTwo === ">"){
+        if (conditionTwo === ">") {
             setConditionTwo("<");
-        }else{
+        } else {
             setConditionTwo(">");
         }
     };
 
-    const handleFilterChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setFilterOption(event.target.value as number);
-        filterRows(rows);
+    const handleOptionChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        const value = Number(event.target.value);
+        setFilterOption(value);
+        changeCondition(value);
     };
 
-    const filterRows = (rows: StockFinanceInfo[]) => {
-        switch (filterOption) {
-            case 1:
-                return rows.filter(row => row.threeYearROEAvg > targetRate && row.bps > row.openingPrice);
+    const changeCondition = (option: number) => {
+        setToggleFix(true);
+        if (option === 1) {
+            setToggleConditionOne(true);
+            setToggleConditionTwo(false);
+            setToggleConditionThree(false);
+        } else {
+            setToggleConditionOne(true);
+            setToggleConditionTwo(true);
+            setToggleConditionThree(true);
+        }
+
+        switch (option) {
             case 2:
-                return rows.filter(row => row.threeYearROEAvg < targetRate && row.bps > row.openingPrice);
+                setConditionOne(">");
+                setConditionTwo(">");
+                break;
             case 3:
-                return rows.filter(row => row.threeYearROEAvg > targetRate && row.bps < row.openingPrice);
-            // Add more cases if needed
+                setConditionOne("<");
+                setConditionTwo(">");
+                break;
+            case 4:
+                setConditionOne(">");
+                setConditionTwo("<");
+                break;
+            case 5:
+                setToggleFix(false);
+                setConditionOne(">");
+                setConditionTwo(">");
+                break;
             default:
-                return rows;
+                break;
         }
     };
 
@@ -125,7 +170,48 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
 
     const handleButtonClick = () => {
         setIsEditing(!isEditing);
+        if (isEditing != false) {
+            updateIsPropriate();
+        }
+        console.log(rows);
     };
+
+    const updateIsPropriate = () => {
+        rows.map((row) => {
+            row.isPropriate = isSuitable(row);
+            console.log(row.isPropriate);
+        });
+    }
+
+    const isSuitable = (row: StockFinanceInfo) => {
+        const targetRateToFloating = targetRate / 100;
+        if (toggleConditionOne && row.expectedReturn < targetRateToFloating) {
+            return false;
+        }
+        if (toggleConditionTwo) {
+            if (conditionOne === ">") {
+                if (row.threeYearROEAvg < targetRateToFloating) {
+                    return false;
+                }
+            } else {
+                if (row.threeYearROEAvg > targetRateToFloating) {
+                    return false;
+                }
+            }
+        }
+        if (toggleConditionThree) {
+            if (conditionTwo === ">") {
+                if (row.bps < row.openingPrice) {
+                    return false;
+                }
+            } else {
+                if (row.bps > row.openingPrice) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     const handleTargetRateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTargetRate(Number(event.target.value));
@@ -139,34 +225,37 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
     return (
 
         <Box sx={{ width: '100%' }}>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} sx={{ p: 3 }}>
                 <Grid xl={3}>
                     <Button variant="contained" color="primary" onClick={handleButtonClick}>
                         {isEditing ? 'Save' : 'Modify'}
                     </Button>
-                    <RadioGroup value={filterOption} onChange={handleFilterChange}>
+                    <RadioGroup value={filterOption} onChange={handleOptionChange}>
                         <FormControlLabel value={1} control={<Radio disabled={!isEditing} />} label="목표수익률 이상 필터링" />
                         <FormControlLabel value={2} control={<Radio disabled={!isEditing} />} label="금상첨화형 눈덩이주식" />
                         <FormControlLabel value={3} control={<Radio disabled={!isEditing} />} label="벤저민 그레이엄형 눈덩이주식" />
                         <FormControlLabel value={4} control={<Radio disabled={!isEditing} />} label="필립 피셔형 눈덩이주식" />
                         <FormControlLabel value={5} control={<Radio disabled={!isEditing} />} label="직접 설정" />
-                        {/* Add more FormControlLabels if needed */}
                     </RadioGroup>
                 </Grid>
-                <Grid xl={9} container direction="column" justifyContent="center">
+                <Divider flexItem={true} orientation='vertical'></Divider>
+                <Grid xl={6} container direction="column" justifyContent="center" sx={{ pl: 7 }}>
                     <Stack spacing={2}>
                         <Paper>
-                            <Switch></Switch>
+                            <Switch disabled={toggleFix} checked={toggleConditionOne} onChange={() => setToggleConditionOne(!toggleConditionOne)}></Switch>
                             <span>목표수익률</span>
                             <TextField
                                 id="outlined-number"
                                 type="number"
+                                value={targetRate}
+                                onChange={handleTargetRateChange}
                                 defaultValue={targetRate}
                                 size='small'
+                                disabled={!isEditing || !toggleConditionOne}
                             />
                         </Paper>
                         <Paper>
-                            <Switch></Switch>
+                            <Switch disabled={toggleFix} checked={toggleConditionTwo} onChange={() => setToggleConditionTwo(!toggleConditionTwo)}></Switch>
                             <span>예상 ROE</span>
                             <ToggleButtonGroup
                                 size='small'
@@ -174,6 +263,7 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
                                 value={conditionOne}
                                 exclusive
                                 onChange={changeConditionOne}
+                                disabled={!isEditing || !toggleConditionTwo}
                             >
                                 <ToggleButton value=">"> &gt;</ToggleButton>
                                 <ToggleButton value="<">&lt;</ToggleButton>
@@ -181,7 +271,7 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
                             <span>목표수익률</span>
                         </Paper>
                         <Paper>
-                            <Switch></Switch>
+                            <Switch disabled={toggleFix} checked={toggleConditionThree} onChange={() => setToggleConditionThree(!toggleConditionThree)}></Switch>
                             <span>현 순자산가치</span>
                             <ToggleButtonGroup
                                 size='small'
@@ -189,6 +279,7 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
                                 value={conditionTwo}
                                 exclusive
                                 onChange={changeConditionTwo}
+                                disabled={!isEditing || !toggleConditionThree}
                             >
                                 <ToggleButton value=">"> &gt;</ToggleButton>
                                 <ToggleButton value="<">&lt;</ToggleButton>
@@ -251,7 +342,7 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
                                     <TableCell align="center">{(row.expectedReturn * 100).toFixed(2)} %</TableCell>
                                     <TableCell align="center">{row.isPropriate ? "적합" : "부적합"}</TableCell>
                                     <TableCell align="center">
-                                        <Button variant="contained" color="primary" onClick={() => {/* Add your button logic here */ }}>
+                                        <Button size='small' variant="contained" color="primary" onClick={() => {/* Add your button logic here */ }}>
                                             저장
                                         </Button>
                                     </TableCell>
