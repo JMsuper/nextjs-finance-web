@@ -1,34 +1,8 @@
 import useFetch from '@/app/hooks/useFetch';
-import { Box, Checkbox, IconButton, InputBase, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Button, TextField, Select, MenuItem, RadioGroup, FormControlLabel, Radio, Grid, Stack, Switch, Typography, ToggleButtonGroup, ToggleButton, Divider } from '@mui/material';
+import { Box, Checkbox, IconButton, InputBase, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Button, TextField, Select, MenuItem, RadioGroup, FormControlLabel, Radio, Grid, Stack, Switch, Typography, ToggleButtonGroup, ToggleButton, Divider, FormControl, InputLabel } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { StockFinanceInfo } from './StockFinanceInfo';
-import styled from '@emotion/styled';
-
-// 1. 목표수익률 설정
-// 목표수익률 설정 시, 그 이상의 기대수익률을 가지는 종목을 필터링하여 보여줌
-
-// 2. 금상첨화형 눈덩이주식 필터링
-// 예상 ROE > 목표수익률, 현 순자산가치 > 현 가격
-
-// 3. 벤저민 그레이엄형 눈덩이주식 필터링
-// 예상 ROE < 목표수익률, 현 순자산가치 > 현 가격
-
-// 4. 필립 피셔형 눈덩이주식 필터링
-// 예상 ROE > 목표수익률, 현 순자산가치 < 현 가격
-
-
-// TODO
-// 1. 옵션과 조건 사이에 Divider 추가(O)
-// 2. 필터링 옵션에 따른 조건 설정 변경 기능 구현(O)
-// 3. 필터링 옵션에 따른, 조건 활성화/비활성화 기능 구현(O)
-
-// 4. 필터링 로직 구현(O)
-// 5. 필터링 결과에 따른 테이블 데이터 출력(O)
-// 6. 필터링 결과에 따른 테이블 데이터 저장 기능 구현
-
-// 7. 테이블 정렬 기능 구현
-// 8. '필터링 결과' 컬럼 적합/부적합 표출 필터링 로직 구현
 
 
 
@@ -79,6 +53,8 @@ const headCells: readonly HeadCell[] = [
     }
 ];
 
+type PropriateFilterType = "없음" | "적합" | "부적합";
+
 interface StepSixProps {
     rows: StockFinanceInfo[];
 }
@@ -95,12 +71,15 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
     const [conditionTwo, setConditionTwo] = useState(">");
 
     // 토글 조건 스위칭 on/off 상태값
-    const [toggleConditionOne, setToggleConditionOne] = useState(false);
+    const [toggleConditionOne, setToggleConditionOne] = useState(true);
     const [toggleConditionTwo, setToggleConditionTwo] = useState(false);
     const [toggleConditionThree, setToggleConditionThree] = useState(false);
 
     // 토글 고정 on/off 상태값
     const [toggleFix, setToggleFix] = useState(true);
+
+    // 적합/부적합 필터링 상태값
+    const [propriateFilter, setPropriateFilter] = useState<PropriateFilterType>("없음");
 
 
     const changeConditionOne = () => {
@@ -161,8 +140,15 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
     };
 
     const filteredRows = useMemo(() => {
-        return rows.filter(row => row.stockName.includes(filter) || row.stockCd.includes(filter));
-    }, [rows, filter]);
+        const filterdRows = rows.filter(row => row.stockName.includes(filter) || row.stockCd.includes(filter));
+        if(propriateFilter === "적합") {
+            return filterdRows.filter(row => row.isPropriate);
+        }else if(propriateFilter === "부적합") {
+            return filterdRows.filter(row => !row.isPropriate);
+        }else{
+            return filterdRows;
+        }
+    }, [rows, propriateFilter, filter]);
 
     const visibleRows = useMemo(() => {
         return filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
@@ -307,6 +293,22 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
                         <SearchIcon />
                     </IconButton>
                 </Paper>
+                <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                    <InputLabel id="demo-select-small-label">필터</InputLabel>
+                    <Select
+                        labelId="demo-select-small-label"
+                        id="demo-select-small"
+                        value={propriateFilter}
+                        label="필터"
+                        onChange={(value) => setPropriateFilter(value.target.value as PropriateFilterType)}
+                    >
+                        <MenuItem value="없음">
+                            <em>없음</em>
+                        </MenuItem>
+                        <MenuItem value={"적합"}>적합</MenuItem>
+                        <MenuItem value={"부적합"}>부적합</MenuItem>
+                    </Select>
+                </FormControl>
             </Box>
 
             <TableContainer>
