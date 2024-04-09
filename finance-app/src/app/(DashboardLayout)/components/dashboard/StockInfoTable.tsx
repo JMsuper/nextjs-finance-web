@@ -11,9 +11,9 @@ import Paper from '@mui/material/Paper';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
-import FinanceInfoDialog from './FinanceInfoDialog';
 import useFetch from '@/app/hooks/useFetch';
-import { TextField, Container } from '@mui/material';
+import { Container } from '@mui/material';
+import FinanceInfoDialog from './FinanceInfoDialog';
 
 interface StockPriceInfo {
   closingPrice: number;
@@ -56,27 +56,31 @@ const headCells: readonly HeadCell[] = [
   {
     id: 'closingPrice',
     label: '종가',
-  }, {
+  },
+  {
     id: 'difference',
     label: '전일대비',
-  }, {
+  },
+  {
     id: 'fluctuationRate',
     label: '등락률',
-  }, {
+  },
+  {
     id: 'openingPrice',
     label: '시가',
-  }
+  },
 ];
 
-
-export default function StockInfoTable() {
-  const rows: StockInfo[] = useFetch("/stockInfos")
+const StockInfoTable: React.FC = () => {
+  const rows: StockInfo[] = useFetch('/stockInfos');
   const [filterdRows, setFilteredRows] = React.useState<StockInfo[]>(rows);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [searched, setSearched] = React.useState<string>("");
+  const [searched, setSearched] = React.useState<string>('');
   const [open, setOpen] = React.useState(false);
-  const [selectedStock, setSelectedStock] = React.useState<StockInfo | null>(null);
+  const [selectedStock, setSelectedStock] = React.useState<StockInfo | null>(
+    null,
+  );
 
   const handleClickOpen = (stockInfo: StockInfo) => {
     setSelectedStock(stockInfo);
@@ -95,24 +99,30 @@ export default function StockInfoTable() {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setSearched(event.target.value);
-  }
-
-  const requestSearch = (searchedVal: string): void => {
-    const filterdRows = rows.filter((row) => {
-      return row.name.includes(searchedVal) || row.stockCd.includes(searchedVal)
-        || row.corpCd.includes(searchedVal) || row.market.includes(searchedVal);
-    });
-    setPage(0);
-    setFilteredRows(filterdRows);
   };
 
+  const requestSearch = (searchedVal: string): void => {
+    const tempRows = rows.filter(
+      (row) =>
+        row.name.includes(searchedVal) ||
+        row.stockCd.includes(searchedVal) ||
+        row.corpCd.includes(searchedVal) ||
+        row.market.includes(searchedVal),
+    );
+    setPage(0);
+    setFilteredRows(tempRows);
+  };
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -120,10 +130,7 @@ export default function StockInfoTable() {
 
   const visibleRows = React.useMemo(
     () =>
-      filterdRows.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage,
-      ),
+      filterdRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
     [filterdRows, page, rowsPerPage],
   );
 
@@ -132,7 +139,13 @@ export default function StockInfoTable() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Paper
           component="form"
-          sx={{ p: '2px 4px', mb: '10px', display: 'flex', alignItems: 'center', width: 300 }}
+          sx={{
+            p: '2px 4px',
+            mb: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            width: 300,
+          }}
         >
           <InputBase
             sx={{ ml: 1, flex: 1 }}
@@ -140,33 +153,37 @@ export default function StockInfoTable() {
             inputProps={{ 'aria-label': '종목명 및 코드 검색' }}
             onChange={handleSearchInputChange}
           />
-          <IconButton onClick={() => requestSearch(searched)} type="button" sx={{ p: '10px' }} aria-label="search">
+          <IconButton
+            onClick={() => requestSearch(searched)}
+            type="button"
+            sx={{ p: '10px' }}
+            aria-label="search"
+          >
             <SearchIcon />
           </IconButton>
         </Paper>
 
-
         <Container sx={{ textAlign: 'right', alignContent: 'space-evenly' }}>
-          <span style={{fontSize: '12px'}}>조회 시점 : {rows[0]?.searchTime.toLocaleString()}</span>
+          <span style={{ fontSize: '12px' }}>
+            조회 시점 : {rows[0]?.searchTime.toLocaleString()}
+          </span>
         </Container>
       </Box>
       <Paper sx={{ width: '100%', mb: 2 }}>
-
-        <FinanceInfoDialog open={open} onClose={handleClose} stockInfo={selectedStock} startYear={2021} endYear={2023} />
+        <FinanceInfoDialog
+          open={open}
+          onClose={handleClose}
+          stockInfo={selectedStock}
+          startYear={2021}
+          endYear={2023}
+        />
 
         <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-          >
+          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
             <TableHead>
               <TableRow>
                 {headCells.map((headCell) => (
-                  <TableCell
-                    key={headCell.id}
-                    align='center'
-                    padding='normal'
-                  >
+                  <TableCell key={headCell.id} align="center" padding="normal">
                     {headCell.label}
                   </TableCell>
                 ))}
@@ -174,8 +191,17 @@ export default function StockInfoTable() {
             </TableHead>
 
             <TableBody>
-              {visibleRows.map((row, index) => {
-                var textColor = row.stockPriceInfo.difference > 0 ? 'red' : row.stockPriceInfo.difference === 0 ? 'black' : 'blue';
+              {visibleRows.map((row) => {
+                let textColor;
+
+                if (row.stockPriceInfo.difference === 0) {
+                  textColor = 'black';
+                } else if (row.stockPriceInfo.difference > 0) {
+                  textColor = 'red';
+                } else {
+                  textColor = 'blue';
+                }
+
                 return (
                   <TableRow
                     hover
@@ -187,11 +213,18 @@ export default function StockInfoTable() {
                     <TableCell align="center">{row.stockCd}</TableCell>
                     <TableCell align="center">{row.corpCd}</TableCell>
                     <TableCell align="center">{row.market}</TableCell>
-                    <TableCell align="center">{row.stockPriceInfo.closingPrice.toLocaleString()}</TableCell>
-                    <TableCell style={{ color: textColor }} align="center">{row.stockPriceInfo.difference.toLocaleString()}</TableCell>
-                    <TableCell style={{ color: textColor }} align="center">{row.stockPriceInfo.fluctuationRate}</TableCell>
-                    <TableCell align="center">{row.stockPriceInfo.openingPrice.toLocaleString()}</TableCell>
-
+                    <TableCell align="center">
+                      {row.stockPriceInfo.closingPrice.toLocaleString()}
+                    </TableCell>
+                    <TableCell style={{ color: textColor }} align="center">
+                      {row.stockPriceInfo.difference.toLocaleString()}
+                    </TableCell>
+                    <TableCell style={{ color: textColor }} align="center">
+                      {row.stockPriceInfo.fluctuationRate}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.stockPriceInfo.openingPrice.toLocaleString()}
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -215,11 +248,13 @@ export default function StockInfoTable() {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          labelRowsPerPage='페이지당 줄수'
-          showFirstButton={true}
-          showLastButton={true}
+          labelRowsPerPage="페이지당 줄수"
+          showFirstButton
+          showLastButton
         />
       </Paper>
     </Box>
   );
-}
+};
+
+export default StockInfoTable;

@@ -1,4 +1,12 @@
-import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -6,8 +14,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import useFetch from "@/app/hooks/useFetch";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 interface FinanceInfo {
   year: number;
@@ -46,7 +53,6 @@ const headCells = [
   { id: 'netLoss', label: '당기순이익(손실)' },
 ];
 
-
 interface StockInfo {
   name: string;
   stockCd: string;
@@ -57,13 +63,18 @@ interface StockInfo {
 interface DialogProps {
   open: boolean;
   onClose: () => void;
-  stockInfo?: StockInfo | null;
-  startYear?: number;
-  endYear?: number;
+  stockInfo: StockInfo | null;
+  startYear: number;
+  endYear: number;
 }
 
-
-export default function FinanceInfoDialog({ open, onClose, stockInfo, startYear, endYear }: DialogProps) {
+const FinanceInfoDialog: React.FC<DialogProps> = ({
+  open,
+  onClose,
+  stockInfo,
+  startYear,
+  endYear,
+}: DialogProps) => {
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState<FinanceInfo[]>([]);
 
@@ -81,7 +92,6 @@ export default function FinanceInfoDialog({ open, onClose, stockInfo, startYear,
           setRows(data);
         }
       } catch (error) {
-        console.log(error);
         setRows([]);
       } finally {
         setLoading(false);
@@ -100,46 +110,60 @@ export default function FinanceInfoDialog({ open, onClose, stockInfo, startYear,
 
   if (loading) {
     return (
-      <CircularProgress style={{ position: 'absolute', top: '50%', left: '50%' }} />
+      <CircularProgress
+        style={{ position: 'absolute', top: '50%', left: '50%' }}
+      />
     );
   }
 
   if (rows.length === 0) {
-    return (<Dialog open={open} onClose={onClose} maxWidth="xl">
-      <DialogTitle>{`${stockInfo?.name}`}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          재무정보를 지원하지 않는 종목입니다.
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="primary">
-          닫기
-        </Button>
-      </DialogActions>
-    </Dialog>)
+    return (
+      <Dialog open={open} onClose={onClose} maxWidth="xl">
+        <DialogTitle>{`${stockInfo?.name}`}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            재무정보를 지원하지 않는 종목입니다.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose} color="primary">
+            닫기
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
   }
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth='md'>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>{`${stockInfo?.name}`}</DialogTitle>
       <DialogContent>
         <TableContainer component={Paper}>
           <Table style={{ tableLayout: 'fixed' }}>
             <TableHead>
               <TableRow>
-                <TableCell style={{ width: '100px' }} align="center"></TableCell>
-                {rows.map((row, index) => (
-                  <TableCell style={{ width: '110px' }} key={index} align="center">{row.year} 년도</TableCell>
+                <TableCell style={{ width: '100px' }} align="center" />
+                {rows.map((row) => (
+                  <TableCell
+                    style={{ width: '110px' }}
+                    key={row.year}
+                    align="center"
+                  >
+                    {row.year} 년도
+                  </TableCell>
                 ))}
               </TableRow>
             </TableHead>
             <TableBody>
               {headCells.map((headCell) => (
                 <TableRow key={headCell.id}>
-                  <TableCell align="center" >{headCell.label}</TableCell>
-                  {rows.map((row, index) => (
-                    <TableCell align="center"  key={index}>{(row[headCell.id as keyof FinanceInfo])?.toLocaleString() || '-'}</TableCell>
+                  <TableCell align="center">{headCell.label}</TableCell>
+                  {rows.map((row) => (
+                    <TableCell align="center" key={row.year + headCell.id}>
+                      {row[
+                        headCell.id as keyof FinanceInfo
+                      ]?.toLocaleString() || '-'}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))}
@@ -154,4 +178,6 @@ export default function FinanceInfoDialog({ open, onClose, stockInfo, startYear,
       </DialogActions>
     </Dialog>
   );
-}
+};
+
+export default FinanceInfoDialog;
