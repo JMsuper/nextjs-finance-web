@@ -113,13 +113,6 @@ const StepOne: React.FC<StepOneProps> = ({ rows, selected, setSelected }) => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Typography
-        variant="h6"
-        sx={{ color: (theme) => theme.palette.primary.main }}
-      >
-        스크리닝 대상 종목 선정
-      </Typography>
-
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <SearchBar
           handleSearchInputChange={(event) => setFilter(event.target.value)}

@@ -101,11 +101,6 @@ const StepTwo: React.FC<StepTwoProps> = ({ rows }) => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <div>
-        현재의 주당순자산가치를 확인한다.
-        <br />
-        주당순자산가치 = 자본총계 / 총방행주식수
-      </div>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Paper
           component="form"

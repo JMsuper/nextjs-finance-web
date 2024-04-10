@@ -107,12 +107,6 @@ const StepFour: React.FC<StepFourProps> = ({ rows }) => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <div>
-        현재 주당순자산가치에서 예상 ROE를 적용해 미래 주당순자산가치를
-        산정한다.
-        <br />
-        10년 후 주당순자산가치 = 현재 주당순자산가치 * (1 + 예상 ROE)^10
-      </div>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Paper
           component="form"

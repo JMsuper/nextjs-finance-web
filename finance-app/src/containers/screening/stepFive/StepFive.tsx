@@ -160,11 +160,6 @@ const StepFive: React.FC<StepFiveProps> = ({ rows }) => {
     <div>Loading...</div>
   ) : (
     <Box sx={{ width: '100%' }}>
-      <div>
-        - 현재의 주가를 대입해 기대수익률을 산정한다.<br></br>- 기대수익률 =
-        (10√(‘10년 후 주당순자산가치’ / ‘현재의 주가’)) - 1<br></br>- 산정된
-        기대수익률이 연 목표수익률을 초과하면 매수한다
-      </div>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Paper
           component="form"

@@ -1,8 +1,20 @@
 'use client';
 
-import { Stepper, Step, StepLabel, Button } from '@mui/material';
+import {
+  Stepper,
+  Step,
+  StepLabel,
+  Button,
+  Typography,
+  Box,
+  IconButton,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import useFetch from '@/hooks/useFetch';
+import { IconHelpCircle } from '@tabler/icons-react';
+import InfoDialog from '@/components/shared/InfoDialog';
+
+import ScreeningStepsInformation from '@/utils/ScreeningStepsInformation';
 import DashboardCard from '../components/shared/DashboardCard';
 import { StockFinanceInfo } from './StockFinanceInfo';
 import StepOne from '../../../containers/screening/stepOne/StepOne';
@@ -12,20 +24,32 @@ import StepFour from '../../../containers/screening/stepFour/StepFour';
 import StepFive from '../../../containers/screening/stepFive/StepFive';
 import StepSix from '../../../containers/screening/stepSix/StepSix';
 
-const steps = [
-  '1단계 : 대상종목 선정',
-  '2단계 : 현재가치 확인',
-  '3단계 : 미래수익률 예측',
-  '4단계 : 미래가치 산정',
-  '5단계 : 기대수익률 산정',
-  '6단계 : 종목 선정',
-];
+// const steps = [
+//   '1단계 : 대상종목 선정',
+//   '2단계 : 현재가치 확인',
+//   '3단계 : 미래수익률 예측',
+//   '4단계 : 미래가치 산정',
+//   '5단계 : 기대수익률 산정',
+//   '6단계 : 종목 선정',
+// ];
+
+// const stepsInformation = [
+//   '대상종목 선정은 종목을 선택하는 단계입니다. 종목을 선택하면 다음 단계로 넘어갈 수 있습니다.',
+//   '현재가치 확인은 주당순자산 가치를 계산하는 단계입니다. 주당순자산 가치를 계산하면 다음 단계로 넘어갈 수 있습니다.',
+//   '미래수익률 예측은 10년 후의 주당순자산 가치를 계산하는 단계입니다. 10년 후의 주당순자산 가치를 계산하면 다음 단계로 넘어갈 수 있습니다.',
+//   '미래가치 산정은 기대수익률을 계산하는 단계입니다. 기대수익률을 계산하면 다음 단계로 넘어갈 수 있습니다.',
+//   '기대수익률 산정은 종목을 선정하는 단계입니다. 종목을 선정하면 다음 단계로 넘어갈 수 있습니다.',
+//   '종목 선정은 종목을 선택하는 단계입니다. 종목을 선택하면 다음 단계로 넘어갈 수 있습니다.',
+// ];
 
 const ScreeningLayout = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState(new Set<number>());
   const rows: StockFinanceInfo[] = useFetch('/screening/step1');
   const [selectedRows, setSelectedRows] = useState<StockFinanceInfo[]>([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const steps = ScreeningStepsInformation;
 
   // step 0
   const [selected, setSelected] = useState<string[]>([]);
@@ -125,23 +149,44 @@ const ScreeningLayout = () => {
 
   return (
     <div>
+      {dialogOpen && (
+        <InfoDialog
+          open={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+          title={steps[activeStep].title}
+          content={steps[activeStep].description}
+        />
+      )}
       <Stepper activeStep={activeStep} sx={{ pb: 4 }}>
-        {steps.map((label, index) => (
-          <Step key={label} completed={completed.has(index)}>
-            <StepLabel>{label}</StepLabel>
+        {steps.map((info, index) => (
+          <Step key={info.title} completed={completed.has(index)}>
+            <StepLabel>{info.title}</StepLabel>
           </Step>
         ))}
       </Stepper>
-      <DashboardCard>{getStepContent(activeStep)}</DashboardCard>
+      <DashboardCard>
+        <div>
+          <Box display="flex" alignItems="center" marginBottom="10px">
+            <Typography variant="h6" color="primary" marginRight="5px">
+              {steps[activeStep].title}
+            </Typography>
+            <IconButton onClick={() => setDialogOpen(true)}>
+              <IconHelpCircle />
+            </IconButton>
+          </Box>
 
-      <div>
+          {getStepContent(activeStep)}
+        </div>
+      </DashboardCard>
+
+      <Box sx={{ mt: '15px' }}>
         {activeStep !== 0 && <Button onClick={handleBack}>Back</Button>}
         {activeStep !== steps.length - 1 && (
           <Button variant="contained" color="primary" onClick={handleNext}>
             Next
           </Button>
         )}
-      </div>
+      </Box>
     </div>
   );
 };

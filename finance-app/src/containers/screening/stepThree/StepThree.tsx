@@ -143,14 +143,6 @@ const StepThree: React.FC<StepThreeProps> = ({ rows }) => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <div>
-        미래가치를 측정하기 위한 ROE수익률을 예측한다
-        <br />
-        ROE = 금년 순이익 / 전년도 순자산
-        <br />
-        최근 3개년 ROE 평균을 향후 10년간의 예상 ROE 수치의 기준으로 사용한다.
-        <br />
-      </div>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Paper
           component="form"
