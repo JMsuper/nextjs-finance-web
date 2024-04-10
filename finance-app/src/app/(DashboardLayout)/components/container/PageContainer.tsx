@@ -1,11 +1,11 @@
-// import { Helmet } from 'react-helmet';
+'use client';
+
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
-
 type Props = {
-  description?: string;
+  description: string;
   children: JSX.Element | JSX.Element[];
-  title?: string;
+  title: string;
 };
 
 const PageContainer = ({ title, description, children }: Props) => (

@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -11,7 +13,6 @@ import Paper from '@mui/material/Paper';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
-import useFetch from '@/app/hooks/useFetch';
 import { Container } from '@mui/material';
 import FinanceInfoDialog from './FinanceInfoDialog';
 
@@ -71,8 +72,12 @@ const headCells: readonly HeadCell[] = [
   },
 ];
 
-const StockInfoTable: React.FC = () => {
-  const rows: StockInfo[] = useFetch('/stockInfos');
+interface StockInfoTableProps {
+  rows: StockInfo[];
+}
+
+const StockInfoTable: React.FC<StockInfoTableProps> = ({ rows }) => {
+  console.log(rows);
   const [filterdRows, setFilteredRows] = React.useState<StockInfo[]>(rows);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);

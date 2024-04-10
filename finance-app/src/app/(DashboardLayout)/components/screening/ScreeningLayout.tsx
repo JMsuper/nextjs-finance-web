@@ -1,3 +1,5 @@
+'use client';
+
 import { Stepper, Step, StepLabel, Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import useFetch from '@/app/hooks/useFetch';
@@ -30,6 +32,7 @@ const ScreeningLayout = () => {
 
   useEffect(() => {
     const newSelectedRows: StockFinanceInfo[] = [];
+
     rows
       .filter((row) => selected.includes(row.stockName))
       .map((row) => newSelectedRows.push(row));
