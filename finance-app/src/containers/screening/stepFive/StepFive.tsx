@@ -1,4 +1,3 @@
-import useFetch from '@/hooks/useFetch';
 import {
   Box,
   Checkbox,
@@ -16,7 +15,7 @@ import {
 } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import { StockFinanceInfo } from './StockFinanceInfo';
+import { StockFinanceInfo } from '../../../app/(DashboardLayout)/screening/StockFinanceInfo';
 
 interface HeadCell {
   id: string;
@@ -67,8 +66,8 @@ const StepFive: React.FC<StepFiveProps> = ({ rows }) => {
   const [filter, setFilter] = useState('');
   const [page, setPage] = useState(0);
   const [isCalculated, setIsCalculated] = useState(false);
-  const rowsPerPage = 8;
-  // const [priceData, setPriceData] = useState<ResponseData>();
+  const rowsPerPage = 6;
+
   const [searchTime, setSearchTime] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -108,7 +107,11 @@ const StepFive: React.FC<StepFiveProps> = ({ rows }) => {
   };
 
   useEffect(() => {
-    fetchData().catch((error) => console.error(error));
+    if (rows[0].openingPrice === undefined) {
+      fetchData().catch((error) => console.error(error));
+    } else {
+      setIsLoading(false);
+    }
   }, []);
 
   useEffect(() => {

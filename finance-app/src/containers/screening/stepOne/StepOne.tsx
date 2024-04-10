@@ -2,9 +2,6 @@ import {
   Box,
   Checkbox,
   Container,
-  IconButton,
-  InputBase,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -15,8 +12,8 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useMemo, useState } from 'react';
-import SearchIcon from '@mui/icons-material/Search';
-import { StockFinanceInfo } from './StockFinanceInfo';
+import SearchBar from '@/components/SearchBar';
+import { StockFinanceInfo } from '../../../app/(DashboardLayout)/screening/StockFinanceInfo';
 
 interface HeadCell {
   id: string;
@@ -122,27 +119,11 @@ const StepOne: React.FC<StepOneProps> = ({ rows, selected, setSelected }) => {
       >
         스크리닝 대상 종목 선정
       </Typography>
+
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Paper
-          component="form"
-          sx={{
-            p: '2px 4px',
-            mb: '2px',
-            display: 'flex',
-            alignItems: 'center',
-            width: 300,
-          }}
-        >
-          <InputBase
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="종목명 및 코드 검색"
-            inputProps={{ 'aria-label': '종목명 및 코드 검색' }}
-            onChange={(event) => setFilter(event.target.value)}
-          />
-          <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
-            <SearchIcon />
-          </IconButton>
-        </Paper>
+        <SearchBar
+          handleSearchInputChange={(event) => setFilter(event.target.value)}
+        />
 
         <Container sx={{ textAlign: 'right', alignContent: 'space-evenly' }}>
           <Typography

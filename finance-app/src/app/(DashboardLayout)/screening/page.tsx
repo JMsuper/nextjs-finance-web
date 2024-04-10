@@ -1,5 +1,5 @@
 import PageContainer from '@/containers/PageContainer';
-import ScreeningLayout from '../components/screening/ScreeningLayout';
+import ScreeningLayout from './ScreeningLayout';
 
 const ScreeningPage = () => (
   <PageContainer

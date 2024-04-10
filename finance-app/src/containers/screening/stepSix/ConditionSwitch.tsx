@@ -1,4 +1,4 @@
-import { Paper, Switch } from '@mui/material';
+import { Paper, Switch, Typography } from '@mui/material';
 
 interface ConditionSwitchProps {
   children: React.ReactNode;
@@ -25,10 +25,21 @@ const ConditionSwitch: React.FC<ConditionSwitchProps> = ({
       width: '100%',
     }}
   >
-    <Switch disabled={disabled} checked={checked} onChange={onChange} />
-    <span>{leftTitle}</span>
+    <Switch
+      disabled={disabled}
+      checked={checked}
+      onChange={onChange}
+      size="small"
+    />
+    <Typography sx={{ fontSize: '0.75rem', mr: '10px' }}>
+      {leftTitle}
+    </Typography>
     {children}
-    {rightTitle && <span>{rightTitle}</span>}
+    {rightTitle && (
+      <Typography sx={{ fontSize: '0.75rem', ml: '10px' }}>
+        {rightTitle}
+      </Typography>
+    )}
   </Paper>
 );
 

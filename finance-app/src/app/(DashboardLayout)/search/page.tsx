@@ -2,7 +2,7 @@
 
 import { Box } from '@mui/material';
 import useFetch from '@/hooks/useFetch';
-import StockInfoTable from '../components/dashboard/StockInfoTable';
+import StockInfoTable from '../../../components/dashboard/StockInfoTable';
 
 const SamplePage: React.FC = () => {
   const rows = useFetch('/stockInfos');

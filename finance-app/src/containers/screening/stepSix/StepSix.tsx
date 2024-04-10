@@ -22,12 +22,17 @@ import {
   Divider,
   FormControl,
   InputLabel,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React, { useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import ConditionSwitchWithToggle from '@/containers/screening/stepSix/ConditionSwitchWithToggle';
 import ConditionSwitch from '@/containers/screening/stepSix/ConditionSwitch';
-import { StockFinanceInfo } from './StockFinanceInfo';
+import { StockFinanceInfo } from '../../../app/(DashboardLayout)/screening/StockFinanceInfo';
 
 interface HeadCell {
   id: string;
@@ -71,6 +76,14 @@ const headCells: readonly HeadCell[] = [
 
 type PropriateFilterType = '없음' | '적합' | '부적합';
 
+const filterOptions = [
+  '목표수익률 이상 필터링',
+  '금상첨화형 눈덩이주식',
+  '벤저민 그레이엄형 눈덩이주식',
+  '필립 피셔형 눈덩이주식',
+  '직접 설정',
+];
+
 interface StepSixProps {
   rows: StockFinanceInfo[];
 }
@@ -81,7 +94,7 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [targetRate, setTargetRate] = useState(15);
   const [filterOption, setFilterOption] = useState(1);
-  const rowsPerPage = 8;
+  const rowsPerPage = 6;
 
   const [conditionOne, setConditionOne] = useState('>');
   const [conditionTwo, setConditionTwo] = useState('>');
@@ -212,7 +225,6 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
     if (isEditing !== false) {
       updateIsPropriate();
     }
-    console.log(rows);
   };
 
   const handleTargetRateChange = (
@@ -227,83 +239,99 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Grid container spacing={2} sx={{ p: 3 }} direction="row">
-        <Grid item xs={4}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleButtonClick}
-          >
-            {isEditing ? 'Save' : 'Modify'}
-          </Button>
-          <RadioGroup value={filterOption} onChange={handleOptionChange}>
-            <FormControlLabel
-              value={1}
-              control={<Radio disabled={!isEditing} />}
-              label="목표수익률 이상 필터링"
-            />
-            <FormControlLabel
-              value={2}
-              control={<Radio disabled={!isEditing} />}
-              label="금상첨화형 눈덩이주식"
-            />
-            <FormControlLabel
-              value={3}
-              control={<Radio disabled={!isEditing} />}
-              label="벤저민 그레이엄형 눈덩이주식"
-            />
-            <FormControlLabel
-              value={4}
-              control={<Radio disabled={!isEditing} />}
-              label="필립 피셔형 눈덩이주식"
-            />
-            <FormControlLabel
-              value={5}
-              control={<Radio disabled={!isEditing} />}
-              label="직접 설정"
-            />
-          </RadioGroup>
-        </Grid>
-        <Divider flexItem orientation="vertical" />
-        <Grid item xs={5}>
-          <Stack spacing={2} height="100%" justifyContent="center">
-            <ConditionSwitch
-              leftTitle="목표수익률"
-              disabled={!isEditing || !toggleConditionOne}
-              checked={toggleConditionOne}
-              onChange={() => setToggleConditionOne(!toggleConditionOne)}
-            >
-              <TextField
-                id="outlined-number"
-                type="number"
-                value={targetRate}
-                onChange={handleTargetRateChange}
-                defaultValue={targetRate}
+      <Accordion sx={{ width: '70%', minHeight: '40px' }}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1-content"
+          id="panel1-header"
+          sx={{ m: 0 }}
+        >
+          <Typography variant="body1" color="primary">
+            종목 선정 조건 설정
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Grid container spacing={2} sx={{ p: 2 }} direction="row">
+            <Grid item xs={4}>
+              <Button
+                variant="contained"
+                color="primary"
                 size="small"
-                disabled={!isEditing || !toggleConditionOne}
-              />
-            </ConditionSwitch>
-            <ConditionSwitchWithToggle
-              leftTitle="예상 ROE"
-              rightTitle="목표수익률"
-              disabled={toggleFix}
-              checked={toggleConditionTwo}
-              onChange={() => setToggleConditionTwo(!toggleConditionTwo)}
-              value={conditionOne}
-              onToggleChange={changeConditionOne}
-            />
-            <ConditionSwitchWithToggle
-              leftTitle="현 순자산가치"
-              rightTitle="현 가격"
-              disabled={toggleFix}
-              checked={toggleConditionThree}
-              onChange={() => setToggleConditionThree(!toggleConditionThree)}
-              value={conditionTwo}
-              onToggleChange={changeConditionTwo}
-            />
-          </Stack>
-        </Grid>
-      </Grid>
+                onClick={handleButtonClick}
+                sx={{ p: '2px' }}
+              >
+                {isEditing ? '저장' : '수정'}
+              </Button>
+              <RadioGroup
+                value={filterOption}
+                onChange={handleOptionChange}
+                sx={{ pt: '10px' }}
+              >
+                {filterOptions.map((optionString, index) => (
+                  <FormControlLabel
+                    key={optionString}
+                    value={index + 1}
+                    control={
+                      <Radio
+                        size="small"
+                        disabled={!isEditing}
+                        sx={{ p: '4px' }}
+                      />
+                    }
+                    label={
+                      <Typography sx={{ fontSize: '0.8rem' }}>
+                        {optionString}
+                      </Typography>
+                    }
+                  />
+                ))}
+              </RadioGroup>
+            </Grid>
+            <Divider flexItem orientation="vertical" />
+            <Grid item xs={6}>
+              <Stack spacing={2} height="100%" justifyContent="center">
+                <ConditionSwitch
+                  leftTitle="목표수익률"
+                  disabled={!isEditing}
+                  checked={toggleConditionOne}
+                  onChange={() => setToggleConditionOne(!toggleConditionOne)}
+                >
+                  <TextField
+                    id="outlined-number"
+                    type="number"
+                    value={targetRate}
+                    onChange={handleTargetRateChange}
+                    defaultValue={targetRate}
+                    size="small"
+                    disabled={!isEditing || !toggleConditionOne}
+                    sx={{ width: '80px' }}
+                  />
+                </ConditionSwitch>
+                <ConditionSwitchWithToggle
+                  leftTitle="예상 ROE"
+                  rightTitle="목표수익률"
+                  disabled={toggleFix}
+                  checked={toggleConditionTwo}
+                  onChange={() => setToggleConditionTwo(!toggleConditionTwo)}
+                  value={conditionOne}
+                  onToggleChange={changeConditionOne}
+                />
+                <ConditionSwitchWithToggle
+                  leftTitle="현 순자산가치"
+                  rightTitle="현 가격"
+                  disabled={toggleFix}
+                  checked={toggleConditionThree}
+                  onChange={() =>
+                    setToggleConditionThree(!toggleConditionThree)
+                  }
+                  value={conditionTwo}
+                  onToggleChange={changeConditionTwo}
+                />
+              </Stack>
+            </Grid>
+          </Grid>
+        </AccordionDetails>
+      </Accordion>
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Paper
@@ -361,22 +389,28 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
           <TableBody>
             {visibleRows.map((row) => (
               <TableRow key={row.stockName}>
-                <TableCell align="center">{row.stockName}</TableCell>
-                <TableCell align="center">{row.stockCd}</TableCell>
-                <TableCell align="center">
+                <TableCell align="center" sx={{ p: '8px' }}>
+                  {row.stockName}
+                </TableCell>
+                <TableCell align="center" sx={{ p: '8px' }}>
+                  {row.stockCd}
+                </TableCell>
+                <TableCell align="center" sx={{ p: '8px' }}>
                   {row.threeYearROEAvg.toLocaleString()}
                 </TableCell>
-                <TableCell align="center">{row.bps.toLocaleString()}</TableCell>
-                <TableCell align="center">
+                <TableCell align="center" sx={{ p: '8px' }}>
+                  {row.bps.toLocaleString()}
+                </TableCell>
+                <TableCell align="center" sx={{ p: '8px' }}>
                   {row.openingPrice.toLocaleString()} 원
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align="center" sx={{ p: '8px' }}>
                   {(row.expectedReturn * 100).toFixed(2)} %
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align="center" sx={{ p: '8px' }}>
                   {row.isPropriate ? '적합' : '부적합'}
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align="center" sx={{ p: '8px' }}>
                   <Button
                     size="small"
                     variant="contained"
