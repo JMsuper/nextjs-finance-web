@@ -1,4 +1,4 @@
-import useFetch from '@/app/hooks/useFetch';
+import useFetch from '@/hooks/useFetch';
 import {
   Box,
   Checkbox,

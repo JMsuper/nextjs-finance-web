@@ -1,4 +1,4 @@
-import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
+import PageContainer from '@/containers/PageContainer';
 import ScreeningLayout from '../components/screening/ScreeningLayout';
 
 const ScreeningPage = () => (

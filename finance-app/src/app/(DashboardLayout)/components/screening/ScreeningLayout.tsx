@@ -2,7 +2,7 @@
 
 import { Stepper, Step, StepLabel, Button } from '@mui/material';
 import { useEffect, useState } from 'react';
-import useFetch from '@/app/hooks/useFetch';
+import useFetch from '@/hooks/useFetch';
 import DashboardCard from '../shared/DashboardCard';
 import { StockFinanceInfo } from './StockFinanceInfo';
 import StepOne from './StepOne';

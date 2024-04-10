@@ -1,0 +1,35 @@
+import { Paper, Switch } from '@mui/material';
+
+interface ConditionSwitchProps {
+  children: React.ReactNode;
+  leftTitle: string;
+  rightTitle?: string;
+  disabled: boolean;
+  checked: boolean;
+  onChange: () => void;
+}
+
+const ConditionSwitch: React.FC<ConditionSwitchProps> = ({
+  children,
+  leftTitle,
+  rightTitle,
+  disabled,
+  checked,
+  onChange,
+}) => (
+  <Paper
+    sx={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-start',
+      width: '100%',
+    }}
+  >
+    <Switch disabled={disabled} checked={checked} onChange={onChange} />
+    <span>{leftTitle}</span>
+    {children}
+    {rightTitle && <span>{rightTitle}</span>}
+  </Paper>
+);
+
+export default ConditionSwitch;

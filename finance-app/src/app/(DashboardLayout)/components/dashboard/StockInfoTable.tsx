@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import SearchBar from '@/components/SearchBar';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,9 +11,6 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import SearchIcon from '@mui/icons-material/Search';
-import InputBase from '@mui/material/InputBase';
-import IconButton from '@mui/material/IconButton';
 import { Container } from '@mui/material';
 import FinanceInfoDialog from './FinanceInfoDialog';
 
@@ -77,11 +75,10 @@ interface StockInfoTableProps {
 }
 
 const StockInfoTable: React.FC<StockInfoTableProps> = ({ rows }) => {
-  console.log(rows);
   const [filterdRows, setFilteredRows] = React.useState<StockInfo[]>(rows);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [searched, setSearched] = React.useState<string>('');
+  // const [searched, setSearched] = React.useState<string>('');
   const [open, setOpen] = React.useState(false);
   const [selectedStock, setSelectedStock] = React.useState<StockInfo | null>(
     null,
@@ -111,12 +108,6 @@ const StockInfoTable: React.FC<StockInfoTableProps> = ({ rows }) => {
     setPage(0);
   };
 
-  const handleSearchInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setSearched(event.target.value);
-  };
-
   const requestSearch = (searchedVal: string): void => {
     const tempRows = rows.filter(
       (row) =>
@@ -127,6 +118,13 @@ const StockInfoTable: React.FC<StockInfoTableProps> = ({ rows }) => {
     );
     setPage(0);
     setFilteredRows(tempRows);
+  };
+
+  const handleSearchInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const searchValue = event.target.value;
+    requestSearch(searchValue);
   };
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -142,31 +140,7 @@ const StockInfoTable: React.FC<StockInfoTableProps> = ({ rows }) => {
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Paper
-          component="form"
-          sx={{
-            p: '2px 4px',
-            mb: '10px',
-            display: 'flex',
-            alignItems: 'center',
-            width: 300,
-          }}
-        >
-          <InputBase
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="종목명 및 코드 검색"
-            inputProps={{ 'aria-label': '종목명 및 코드 검색' }}
-            onChange={handleSearchInputChange}
-          />
-          <IconButton
-            onClick={() => requestSearch(searched)}
-            type="button"
-            sx={{ p: '10px' }}
-            aria-label="search"
-          >
-            <SearchIcon />
-          </IconButton>
-        </Paper>
+        <SearchBar handleSearchInputChange={handleSearchInputChange} />
 
         <Container sx={{ textAlign: 'right', alignContent: 'space-evenly' }}>
           <span style={{ fontSize: '12px' }}>

@@ -1,7 +1,7 @@
 'use client';
 
 import { Box } from '@mui/material';
-import useFetch from '@/app/hooks/useFetch';
+import useFetch from '@/hooks/useFetch';
 import StockInfoTable from '../components/dashboard/StockInfoTable';
 
 const SamplePage: React.FC = () => {

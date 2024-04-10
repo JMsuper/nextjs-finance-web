@@ -19,15 +19,14 @@ import {
   Radio,
   Grid,
   Stack,
-  Switch,
-  ToggleButtonGroup,
-  ToggleButton,
   Divider,
   FormControl,
   InputLabel,
 } from '@mui/material';
 import React, { useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
+import ConditionSwitchWithToggle from '@/containers/screening/stepSix/ConditionSwitchWithToggle';
+import ConditionSwitch from '@/containers/screening/stepSix/ConditionSwitch';
 import { StockFinanceInfo } from './StockFinanceInfo';
 
 interface HeadCell {
@@ -228,8 +227,8 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Grid container spacing={2} sx={{ p: 3 }}>
-        <Grid xl={3}>
+      <Grid container spacing={2} sx={{ p: 3 }} direction="row">
+        <Grid item xs={4}>
           <Button
             variant="contained"
             color="primary"
@@ -266,21 +265,14 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
           </RadioGroup>
         </Grid>
         <Divider flexItem orientation="vertical" />
-        <Grid
-          xl={6}
-          container
-          direction="column"
-          justifyContent="center"
-          sx={{ pl: 7 }}
-        >
-          <Stack spacing={2}>
-            <Paper>
-              <Switch
-                disabled={toggleFix}
-                checked={toggleConditionOne}
-                onChange={() => setToggleConditionOne(!toggleConditionOne)}
-              />
-              <span>목표수익률</span>
+        <Grid item xs={5}>
+          <Stack spacing={2} height="100%" justifyContent="center">
+            <ConditionSwitch
+              leftTitle="목표수익률"
+              disabled={!isEditing || !toggleConditionOne}
+              checked={toggleConditionOne}
+              onChange={() => setToggleConditionOne(!toggleConditionOne)}
+            >
               <TextField
                 id="outlined-number"
                 type="number"
@@ -290,47 +282,25 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
                 size="small"
                 disabled={!isEditing || !toggleConditionOne}
               />
-            </Paper>
-            <Paper>
-              <Switch
-                disabled={toggleFix}
-                checked={toggleConditionTwo}
-                onChange={() => setToggleConditionTwo(!toggleConditionTwo)}
-              />
-              <span>예상 ROE</span>
-              <ToggleButtonGroup
-                size="small"
-                color="primary"
-                value={conditionOne}
-                exclusive
-                onChange={changeConditionOne}
-                disabled={!isEditing || !toggleConditionTwo}
-              >
-                <ToggleButton value=">"> &gt;</ToggleButton>
-                <ToggleButton value="<">&lt;</ToggleButton>
-              </ToggleButtonGroup>
-              <span>목표수익률</span>
-            </Paper>
-            <Paper>
-              <Switch
-                disabled={toggleFix}
-                checked={toggleConditionThree}
-                onChange={() => setToggleConditionThree(!toggleConditionThree)}
-              />
-              <span>현 순자산가치</span>
-              <ToggleButtonGroup
-                size="small"
-                color="primary"
-                value={conditionTwo}
-                exclusive
-                onChange={changeConditionTwo}
-                disabled={!isEditing || !toggleConditionThree}
-              >
-                <ToggleButton value=">"> &gt;</ToggleButton>
-                <ToggleButton value="<">&lt;</ToggleButton>
-              </ToggleButtonGroup>
-              <span>현 가격</span>
-            </Paper>
+            </ConditionSwitch>
+            <ConditionSwitchWithToggle
+              leftTitle="예상 ROE"
+              rightTitle="목표수익률"
+              disabled={toggleFix}
+              checked={toggleConditionTwo}
+              onChange={() => setToggleConditionTwo(!toggleConditionTwo)}
+              value={conditionOne}
+              onToggleChange={changeConditionOne}
+            />
+            <ConditionSwitchWithToggle
+              leftTitle="현 순자산가치"
+              rightTitle="현 가격"
+              disabled={toggleFix}
+              checked={toggleConditionThree}
+              onChange={() => setToggleConditionThree(!toggleConditionThree)}
+              value={conditionTwo}
+              onToggleChange={changeConditionTwo}
+            />
           </Stack>
         </Grid>
       </Grid>
