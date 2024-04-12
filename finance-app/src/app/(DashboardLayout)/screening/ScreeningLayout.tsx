@@ -16,14 +16,14 @@ import InfoDialog from '@/components/shared/InfoDialog';
 
 import ScreeningStepsInformation from '@/utils/ScreeningStepsInformation';
 import Config from '@/configs/config.export';
+import StepOne from '@/containers/screening/stepOne/StepOne';
+import StepThree from '@/containers/screening/stepThree/StepThree';
+import StepTwo from '@/containers/screening/stepTwo/StepTwo';
+import StepFour from '@/containers/screening/stepFour/StepFour';
+import StepFive from '@/containers/screening/stepFive/StepFive';
+import StepSix from '@/containers/screening/stepSix/StepSix';
 import DashboardCard from '../components/shared/DashboardCard';
 import { StockFinanceInfo } from './StockFinanceInfo';
-import StepOne from '../../../containers/screening/stepOne/StepOne';
-import StepTwo from '../../../containers/screening/stepTwo/StepTwo';
-import StepThree from '../../../containers/screening/stepThree/StepThree';
-import StepFour from '../../../containers/screening/stepFour/StepFour';
-import StepFive from '../../../containers/screening/stepFive/StepFive';
-import StepSix from '../../../containers/screening/stepSix/StepSix';
 
 // const steps = [
 //   '1단계 : 대상종목 선정',
