@@ -15,6 +15,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from 'react';
+import Config from '@/configs/config.export';
 
 interface FinanceInfo {
   year: number;
@@ -81,7 +82,7 @@ const FinanceInfoDialog: React.FC<DialogProps> = ({
   useEffect(() => {
     let isMounted = true; // 마운트 상태 추적
 
-    const url = `/financeInfo/${stockInfo?.corpCd}?startYear=${startYear}&endYear=${endYear}`;
+    const url = `${Config().baseUrl}/financeInfo/${stockInfo?.corpCd}?startYear=${startYear}&endYear=${endYear}`;
 
     const fetchData = async () => {
       try {

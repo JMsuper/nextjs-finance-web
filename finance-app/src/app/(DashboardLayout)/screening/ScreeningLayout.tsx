@@ -15,6 +15,7 @@ import { IconHelpCircle } from '@tabler/icons-react';
 import InfoDialog from '@/components/shared/InfoDialog';
 
 import ScreeningStepsInformation from '@/utils/ScreeningStepsInformation';
+import Config from '@/configs/config.export';
 import DashboardCard from '../components/shared/DashboardCard';
 import { StockFinanceInfo } from './StockFinanceInfo';
 import StepOne from '../../../containers/screening/stepOne/StepOne';
@@ -45,7 +46,9 @@ import StepSix from '../../../containers/screening/stepSix/StepSix';
 const ScreeningLayout = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState(new Set<number>());
-  const rows: StockFinanceInfo[] = useFetch('/screening/step1');
+  const rows: StockFinanceInfo[] = useFetch(
+    `${Config().baseUrl}/screening/step1`,
+  );
   const [selectedRows, setSelectedRows] = useState<StockFinanceInfo[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
 

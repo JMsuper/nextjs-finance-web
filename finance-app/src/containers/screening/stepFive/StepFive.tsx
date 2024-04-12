@@ -16,6 +16,7 @@ import {
 import React, { useEffect, useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { StockFinanceInfo } from '../../../app/(DashboardLayout)/screening/StockFinanceInfo';
+import Config from '@/configs/config.export';
 
 interface HeadCell {
   id: string;
@@ -74,7 +75,7 @@ const StepFive: React.FC<StepFiveProps> = ({ rows }) => {
   const fetchData = async () => {
     const stockCodeList = rows.map((row) => row.stockCd);
 
-    const url = '/screening/step5';
+    const url = `${Config().baseUrl}/screening/step5`;
     const body = JSON.stringify({ stockCodeList });
     const options = {
       method: 'POST',
