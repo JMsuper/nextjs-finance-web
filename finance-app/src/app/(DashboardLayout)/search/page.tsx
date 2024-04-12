@@ -1,19 +1,18 @@
 'use client';
-import { Box, Grid, Typography } from '@mui/material';
-import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
-import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
-import StockInfoTable from '../components/dashboard/StockInfoTable';
 
+import { Box } from '@mui/material';
+import useFetch from '@/hooks/useFetch';
+import Config from '@/configs/config.export';
+import StockInfoTable from '../../../components/dashboard/StockInfoTable';
 
-const SamplePage = () => {
+const SamplePage: React.FC = () => {
+  const rows = useFetch(`${Config().baseUrl}/stockInfos`);
+
   return (
-    <PageContainer title="Dashboard" description="this is Dashboard">
-      <Box>
-            <StockInfoTable />
-      </Box>
-    </PageContainer>
+    <Box>
+      <StockInfoTable rows={rows} />
+    </Box>
   );
 };
 
 export default SamplePage;
-

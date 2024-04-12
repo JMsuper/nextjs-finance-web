@@ -1,37 +1,33 @@
-"use client";
-import { styled, Container, Box } from "@mui/material";
-import React, { useState } from "react";
-import Header from "@/app/(DashboardLayout)/layout/header/Header";
-import Sidebar from "@/app/(DashboardLayout)/layout/sidebar/Sidebar";
+'use client';
 
+import { styled, Container, Box } from '@mui/material';
+import React, { useState } from 'react';
+import Header from '@/app/(DashboardLayout)/layout/header/Header';
+import Sidebar from '@/app/(DashboardLayout)/layout/sidebar/Sidebar';
 
-const MainWrapper = styled("div")(() => ({
-  display: "flex",
-  minHeight: "100vh",
-  width: "100%",
+const MainWrapper = styled('div')(() => ({
+  display: 'flex',
+  minHeight: '100vh',
+  width: '100%',
 }));
 
-const PageWrapper = styled("div")(() => ({
-  display: "flex",
+const PageWrapper = styled('div')(() => ({
+  display: 'flex',
   flexGrow: 1,
-  paddingBottom: "60px",
-  flexDirection: "column",
+  paddingBottom: '60px',
+  flexDirection: 'column',
   zIndex: 1,
-  backgroundColor: "transparent",
+  backgroundColor: 'transparent',
 }));
 
-interface Props {
+type RootLayoutProps = {
   children: React.ReactNode;
-}
+};
 
-
-
-export default function RootLayout({
+const RootLayout: React.FC<RootLayoutProps> = ({
   children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
+}: RootLayoutProps) => {
+  const [isSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   return (
     <MainWrapper className="mainwrapper">
@@ -56,14 +52,14 @@ export default function RootLayout({
         {/* ------------------------------------------- */}
         <Container
           sx={{
-            paddingTop: "20px",
-            maxWidth: "1200px",
+            paddingTop: '20px',
+            maxWidth: '1200px',
           }}
         >
           {/* ------------------------------------------- */}
           {/* Page Route */}
           {/* ------------------------------------------- */}
-          <Box sx={{ minHeight: "calc(100vh - 170px)" }}>{children}</Box>
+          <Box sx={{ minHeight: 'calc(100vh - 170px)' }}>{children}</Box>
           {/* ------------------------------------------- */}
           {/* End Page */}
           {/* ------------------------------------------- */}
@@ -71,4 +67,6 @@ export default function RootLayout({
       </PageWrapper>
     </MainWrapper>
   );
-}
+};
+
+export default RootLayout;
