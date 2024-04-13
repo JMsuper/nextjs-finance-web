@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import {
   Box,
   IconButton,
@@ -12,10 +13,10 @@ import {
   TableRow,
   Button,
 } from '@mui/material';
+import Config from '@/configs/config.export';
 import React, { useEffect, useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { StockFinanceInfo } from '../../../app/(DashboardLayout)/screening/StockFinanceInfo';
-import Config from '@/configs/config.export';
 
 interface HeadCell {
   id: string;
@@ -114,18 +115,28 @@ const StepFive: React.FC<StepFiveProps> = ({ rows }) => {
     setIsCalculated(false);
   }, [rows]);
 
-  const filteredRows = useMemo(() => {
-    return rows.filter(
-      (row) => row.stockName.includes(filter) || row.stockCd.includes(filter),
-    );
-  }, [rows, filter]);
+  const filteredRows = useMemo(
+    () =>
+      rows.filter(
+        (row) => row.stockName.includes(filter) || row.stockCd.includes(filter),
+      ),
+    [rows, filter],
+  );
 
-  const visibleRows = useMemo(() => {
-    return filteredRows.slice(
-      page * rowsPerPage,
-      page * rowsPerPage + rowsPerPage,
-    );
-  }, [filteredRows, page, rowsPerPage]);
+  const visibleRows = useMemo(
+    () =>
+      filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    [filteredRows, page, rowsPerPage],
+  );
+
+  const calculateExpectedReturn = (stock: StockFinanceInfo) => {
+    const { openingPrice } = stock;
+
+    if (openingPrice === undefined || openingPrice === 0) {
+      return 0;
+    }
+    return (stock.tenYearFutureValue / openingPrice) ** (1 / 10) - 1;
+  };
 
   const calculateAllFutureValue = () => {
     if (isCalculated) {
@@ -137,15 +148,6 @@ const StepFive: React.FC<StepFiveProps> = ({ rows }) => {
       stock.expectedReturn = calculateExpectedReturn(stock);
     });
     setIsCalculated(true);
-  };
-
-  const calculateExpectedReturn = (stock: StockFinanceInfo) => {
-    const openingPrice = stock.openingPrice;
-
-    if (openingPrice === undefined || openingPrice === 0) {
-      return 0;
-    }
-    return (stock.tenYearFutureValue / openingPrice) ** (1 / 10) - 1;
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -199,32 +201,28 @@ const StepFive: React.FC<StepFiveProps> = ({ rows }) => {
           </TableHead>
 
           <TableBody>
-            {visibleRows.map((row, index) => {
-              return (
-                <TableRow key={row.stockName}>
-                  <TableCell align="center">{row.stockName}</TableCell>
-                  <TableCell align="center">{row.stockCd}</TableCell>
-                  <TableCell align="center">
-                    {row.threeYearROEAvg.toLocaleString()}
-                  </TableCell>
-                  <TableCell align="center">
-                    {row.bps.toLocaleString()}
-                  </TableCell>
-                  <TableCell align="center">
-                    {row.tenYearFutureValue.toLocaleString()}
-                  </TableCell>
-                  <TableCell align="center">
-                    {row.openingPrice.toLocaleString()} 원
-                  </TableCell>
-                  <TableCell align="center">
-                    {row.expectedReturn
-                      ? (row.expectedReturn * 100).toFixed(2)
-                      : 0}{' '}
-                    %
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+            {visibleRows.map((row) => (
+              <TableRow key={row.stockName}>
+                <TableCell align="center">{row.stockName}</TableCell>
+                <TableCell align="center">{row.stockCd}</TableCell>
+                <TableCell align="center">
+                  {row.threeYearROEAvg.toLocaleString()}
+                </TableCell>
+                <TableCell align="center">{row.bps.toLocaleString()}</TableCell>
+                <TableCell align="center">
+                  {row.tenYearFutureValue.toLocaleString()}
+                </TableCell>
+                <TableCell align="center">
+                  {row.openingPrice.toLocaleString()} 원
+                </TableCell>
+                <TableCell align="center">
+                  {row.expectedReturn
+                    ? (row.expectedReturn * 100).toFixed(2)
+                    : 0}{' '}
+                  %
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -236,8 +234,8 @@ const StepFive: React.FC<StepFiveProps> = ({ rows }) => {
         onPageChange={handleChangePage}
         labelRowsPerPage="페이지당 줄수"
         rowsPerPageOptions={[]}
-        showFirstButton={true}
-        showLastButton={true}
+        showFirstButton
+        showLastButton
       />
     </Box>
   );
