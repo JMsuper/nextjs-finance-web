@@ -1,6 +1,5 @@
 import {
   Box,
-  Checkbox,
   IconButton,
   InputBase,
   Paper,
@@ -86,10 +85,6 @@ const StepFive: React.FC<StepFiveProps> = ({ rows }) => {
     };
 
     const response = await fetch(url, options);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
 
     const data: ResponseData = await response.json();
     data.openingPriceMap = new Map(Object.entries(data.openingPriceMap));
