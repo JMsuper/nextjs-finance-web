@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Typography,
@@ -7,10 +7,9 @@ import {
   Button,
   Stack,
   Checkbox,
-} from "@mui/material";
-import Link from "next/link";
-
-import CustomTextField from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField";
+} from '@mui/material';
+import Link from 'next/link';
+import CustomTextField from '@/components/shared/CustomTextField';
 
 interface loginType {
   title?: string;
@@ -70,8 +69,8 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => (
           href="/"
           fontWeight="500"
           sx={{
-            textDecoration: "none",
-            color: "primary.main",
+            textDecoration: 'none',
+            color: 'primary.main',
           }}
         >
           Forgot Password ?
