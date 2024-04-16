@@ -7,6 +7,7 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
+  Stack,
   Tooltip,
   Typography,
 } from '@mui/material';
@@ -20,6 +21,7 @@ import Paper from '@mui/material/Paper';
 import { useEffect, useState } from 'react';
 import Config from '@/configs/config.export';
 import FinanceInfoDialogToolTip from './FinanceInfoDialogToolTip';
+import DartDetailLinkButton from '../shared/DartDetailLinkButton';
 
 interface FinanceInfo {
   year: number;
@@ -141,7 +143,20 @@ const FinanceInfoDialog: React.FC<DialogProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle>{`${stockInfo?.name}`}</DialogTitle>
+      <DialogTitle marginY="6px">
+        <Stack
+          direction="row"
+          spacing={2}
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Typography variant="h6" color="initial">
+            {stockInfo?.name}
+          </Typography>
+
+          <DartDetailLinkButton stockCd={stockInfo?.stockCd} />
+        </Stack>
+      </DialogTitle>
       <DialogContent>
         <TableContainer component={Paper}>
           <Table style={{ tableLayout: 'fixed' }}>
