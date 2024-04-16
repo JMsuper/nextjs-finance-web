@@ -43,13 +43,13 @@ const Menuitems = [
     id: uniqueId(),
     title: '매수/매도 알리미',
     icon: IconBellPlus,
-    href: '/authentication/register',
+    href: '/services/alamy',
   },
   {
     id: uniqueId(),
     title: '종목 정보 구독',
     icon: IconReport,
-    href: '/authentication/register',
+    href: '/services/subscription',
   },
   {
     navlabel: true,
@@ -59,13 +59,13 @@ const Menuitems = [
     id: uniqueId(),
     title: '저장 종목조회',
     icon: IconListSearch,
-    href: '/authentication/login',
+    href: '/mypage/search-save-stock',
   },
   {
     id: uniqueId(),
     title: '알리미/구독 관리',
     icon: IconSettings,
-    href: '/authentication/login',
+    href: '/mypage/services-management',
   },
   {
     navlabel: true,

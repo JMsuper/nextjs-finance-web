@@ -15,7 +15,7 @@ const ScreeningStepsInformation: IScreeningStepsInformation[] = [
           <strong>기대수익률</strong>을 확인하고 싶은 종목을 선택해주세요.
         </p>
         <p>
-          표의 우측상단에 있는 박스를 클릭하면 <strong>전체 종목을 선택</strong>
+          표의 좌측상단에 있는 박스를 클릭하면 <strong>전체 종목을 선택</strong>
           할 수 있습니다.
         </p>
         <p>
