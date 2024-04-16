@@ -28,6 +28,11 @@ import {
   Typography,
   Zoom,
   Card,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React, { useMemo, useState } from 'react';
@@ -99,6 +104,7 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
   const [filterOption, setFilterOption] = useState(1);
   const [isFilterApplied, setIsFilterApplied] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
 
   const [selectedRow, setSelectedRow] = useState<StockFinanceInfo>();
 
@@ -268,6 +274,26 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
         startYear={2021}
         endYear={2023}
       />
+      <Dialog
+        open={isSaveDialogOpen}
+        onClose={() => setIsSaveDialogOpen(false)}
+      >
+        <DialogTitle id="alert-dialog-title">
+          {'종목을 저장하시겠습니까?'}
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={() => setIsSaveDialogOpen(false)}>아니요</Button>
+          <Button
+            onClick={() => {
+              setIsSaveDialogOpen(false);
+            }}
+            autoFocus
+          >
+            네
+          </Button>
+        </DialogActions>
+      </Dialog>
+      ;
       <Accordion sx={{ width: '70%', minHeight: '40px' }}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -361,7 +387,6 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
           </Grid>
         </AccordionDetails>
       </Accordion>
-
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Paper
           component="form"
@@ -402,7 +427,6 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
           </Select>
         </FormControl>
       </Box>
-
       <TableContainer>
         <Table sx={{ minWidth: 1000 }} aria-labelledby="tableTitle">
           <TableHead>
@@ -461,8 +485,9 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
                     size="small"
                     variant="contained"
                     color="primary"
-                    onClick={() => {
-                      /* Add your button logic here */
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setIsSaveDialogOpen(true);
                     }}
                   >
                     저장

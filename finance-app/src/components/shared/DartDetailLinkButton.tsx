@@ -20,7 +20,7 @@ const DartDetailLinkButton = ({ stockCd }: { stockCd: string | undefined }) => {
       size="small"
       onClick={() => handleClick(stockCd)}
     >
-      DART 전자공시 조회
+      DART 전자공시에서 확인하기
     </Button>
   );
 };

@@ -212,16 +212,16 @@ const StockInfoTable: React.FC<StockInfoTableProps> = ({ rows }) => {
                     <TableCell align="center">{row.corpCd}</TableCell>
                     <TableCell align="center">{row.market}</TableCell>
                     <TableCell align="center">
-                      {row.stockPriceInfo.closingPrice.toLocaleString()}
+                      {row.stockPriceInfo.closingPrice.toLocaleString()} 원
                     </TableCell>
                     <TableCell style={{ color: textColor }} align="center">
                       {row.stockPriceInfo.difference.toLocaleString()}
                     </TableCell>
                     <TableCell style={{ color: textColor }} align="center">
-                      {row.stockPriceInfo.fluctuationRate}
+                      {row.stockPriceInfo.fluctuationRate} %
                     </TableCell>
                     <TableCell align="center">
-                      {row.stockPriceInfo.openingPrice.toLocaleString()}
+                      {row.stockPriceInfo.openingPrice.toLocaleString()} 원
                     </TableCell>
                   </TableRow>
                 );
