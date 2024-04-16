@@ -6,6 +6,9 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  IconButton,
+  Tooltip,
+  Typography,
 } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -16,6 +19,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from 'react';
 import Config from '@/configs/config.export';
+import FinanceInfoDialogToolTip from './FinanceInfoDialogToolTip';
 
 interface FinanceInfo {
   year: number;
@@ -158,7 +162,13 @@ const FinanceInfoDialog: React.FC<DialogProps> = ({
             <TableBody>
               {headCells.map((headCell) => (
                 <TableRow key={headCell.id}>
-                  <TableCell align="center">{headCell.label}</TableCell>
+                  <TableCell align="center">
+                    <Tooltip title={FinanceInfoDialogToolTip[headCell.id]}>
+                      <Typography variant="body2" color="Highlight">
+                        {headCell.label}{' '}
+                      </Typography>
+                    </Tooltip>
+                  </TableCell>
                   {rows.map((row) => (
                     <TableCell align="center" key={row.year + headCell.id}>
                       {row[
