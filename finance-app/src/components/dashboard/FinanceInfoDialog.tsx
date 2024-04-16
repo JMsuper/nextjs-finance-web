@@ -22,6 +22,10 @@ import { useEffect, useState } from 'react';
 import Config from '@/configs/config.export';
 import FinanceInfoDialogToolTip from './FinanceInfoDialogToolTip';
 import DartDetailLinkButton from '../shared/DartDetailLinkButton';
+import {
+  CurrencyScaleOption,
+  convertNumberScaleWithCurrency,
+} from '@/utils/NumberUtil';
 
 interface FinanceInfo {
   year: number;
@@ -186,9 +190,12 @@ const FinanceInfoDialog: React.FC<DialogProps> = ({
                   </TableCell>
                   {rows.map((row) => (
                     <TableCell align="center" key={row.year + headCell.id}>
-                      {row[
-                        headCell.id as keyof FinanceInfo
-                      ]?.toLocaleString() || '-'}
+                      {headCell.id === 'fsDiv'
+                        ? row[headCell.id]
+                        : convertNumberScaleWithCurrency(
+                            Number(row[headCell.id as keyof FinanceInfo]),
+                            CurrencyScaleOption.Thousand,
+                          )}
                     </TableCell>
                   ))}
                 </TableRow>

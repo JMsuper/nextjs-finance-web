@@ -11,8 +11,9 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Container } from '@mui/material';
+import { Container, List, ListItem, Typography } from '@mui/material';
 import FinanceInfoDialog from './FinanceInfoDialog';
+import { formatDate } from '@/utils/NumberUtil';
 
 interface StockPriceInfo {
   closingPrice: number;
@@ -22,7 +23,7 @@ interface StockPriceInfo {
 }
 
 interface StockInfo {
-  searchTime: Date;
+  searchTime: string;
   name: string;
   stockCd: string;
   corpCd: string;
@@ -137,16 +138,32 @@ const StockInfoTable: React.FC<StockInfoTableProps> = ({ rows }) => {
     [filterdRows, page, rowsPerPage],
   );
 
+  console.log(rows[0]?.searchTime);
+  console.log(typeof rows[0]?.searchTime);
+
   return (
     <Box sx={{ width: '100%' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
         <SearchBar handleSearchInputChange={handleSearchInputChange} />
-
-        <Container sx={{ textAlign: 'right', alignContent: 'space-evenly' }}>
-          <span style={{ fontSize: '12px' }}>
-            조회 시점 : {rows[0]?.searchTime.toLocaleString()}
-          </span>
-        </Container>
+        <List>
+          <ListItem>
+            <Typography variant="body2" color="initial">
+              종목을 클릭하여 재무정보를 확인하세요
+            </Typography>
+          </ListItem>
+          <ListItem>
+            <Typography variant="body2" color="initial">
+              조회 시점 :{' '}
+              {rows[0]?.searchTime && formatDate(rows[0].searchTime)}
+            </Typography>
+          </ListItem>
+        </List>
       </Box>
       <Paper sx={{ width: '100%', mb: 2 }}>
         <FinanceInfoDialog

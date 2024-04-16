@@ -13,7 +13,14 @@ import {
 } from '@mui/material';
 import React, { useMemo, useState } from 'react';
 import SearchBar from '@/components/SearchBar';
-import { StockFinanceInfo } from '../../../app/(DashboardLayout)/screening/StockFinanceInfo';
+import {
+  FinanceInfo,
+  StockFinanceInfo,
+} from '../../../app/(DashboardLayout)/screening/StockFinanceInfo';
+import {
+  CurrencyScaleOption,
+  convertNumberScaleWithCurrency,
+} from '@/utils/NumberUtil';
 
 interface HeadCell {
   id: string;
@@ -49,6 +56,13 @@ const headCells: readonly HeadCell[] = [
     id: 'fsDiv',
     label: '재무제표 구분',
   },
+];
+
+const numberHeadCellIdList: string[] = [
+  'totalAsset',
+  'totalLiabilities',
+  'totalCapital',
+  'netIncome',
 ];
 
 interface StepOneProps {
@@ -151,40 +165,44 @@ const StepOne: React.FC<StepOneProps> = ({ rows, selected, setSelected }) => {
           <TableBody>
             {visibleRows.map((row) => {
               const isItemSelected = selected.indexOf(row.stockName) !== -1;
+              const { stockName, stockCd } = row;
+              const financeInfo_2023 = row.financeInfoList.filter(
+                (financeInfo) => financeInfo.year === 2023,
+              )[0];
               return (
                 <TableRow
-                  key={row.stockName}
+                  key={stockName}
                   selected={isItemSelected}
-                  onClick={(event) => handleClick(event, row.stockName)}
+                  onClick={(event) => handleClick(event, stockName)}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox checked={isItemSelected} />
                   </TableCell>
-                  <TableCell align="center">{row.stockName}</TableCell>
-                  <TableCell align="center">{row.stockCd}</TableCell>
+                  <TableCell align="center">{stockName}</TableCell>
+                  <TableCell align="center">{stockCd}</TableCell>
                   <TableCell align="center">
-                    {row.financeInfoList
-                      .filter((financeInfo) => financeInfo.year === 2023)[0]
-                      .totalAsset.toLocaleString()}{' '}
-                    원
+                    {convertNumberScaleWithCurrency(
+                      financeInfo_2023.totalAsset,
+                      CurrencyScaleOption.None,
+                    )}
                   </TableCell>
                   <TableCell align="center">
-                    {row.financeInfoList
-                      .filter((financeInfo) => financeInfo.year === 2023)[0]
-                      .totalLiabilities.toLocaleString()}{' '}
-                    원
+                    {convertNumberScaleWithCurrency(
+                      financeInfo_2023.totalLiabilities,
+                      CurrencyScaleOption.None,
+                    )}
                   </TableCell>
                   <TableCell align="center">
-                    {row.financeInfoList
-                      .filter((financeInfo) => financeInfo.year === 2023)[0]
-                      .totalCapital.toLocaleString()}{' '}
-                    원
+                    {convertNumberScaleWithCurrency(
+                      financeInfo_2023.totalCapital,
+                      CurrencyScaleOption.None,
+                    )}
                   </TableCell>
                   <TableCell align="center">
-                    {row.financeInfoList
-                      .filter((financeInfo) => financeInfo.year === 2023)[0]
-                      .netIncome.toLocaleString()}{' '}
-                    원
+                    {convertNumberScaleWithCurrency(
+                      financeInfo_2023.netIncome,
+                      CurrencyScaleOption.None,
+                    )}
                   </TableCell>
                   <TableCell align="center">
                     {row.financeInfoList[0].fsDiv}
