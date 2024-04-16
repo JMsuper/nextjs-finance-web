@@ -10,6 +10,7 @@ export interface FinanceInfo {
 
 export interface StockFinanceInfo {
   stockName: string;
+  corpCd: string;
   stockCd: string;
   shares: number;
   bps: number;

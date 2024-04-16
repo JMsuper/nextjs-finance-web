@@ -12,10 +12,12 @@ import {
   TablePagination,
   TableRow,
   Button,
+  tableCellClasses,
 } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { StockFinanceInfo } from '../../../app/(DashboardLayout)/screening/StockFinanceInfo';
+import styled from '@emotion/styled';
 
 interface HeadCell {
   id: string;
@@ -141,6 +143,8 @@ const StepThree: React.FC<StepThreeProps> = ({ rows }) => {
     setPage(newPage);
   };
 
+  const tableCellBackgroundColor = '#F8FCFE';
+
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -221,10 +225,16 @@ const StepThree: React.FC<StepThreeProps> = ({ rows }) => {
                   <TableRow key={row.stockName}>
                     <TableCell align="center">{row.stockName}</TableCell>
                     <TableCell align="center">{row.stockCd}</TableCell>
-                    <TableCell align="center">
+                    <TableCell
+                      align="center"
+                      sx={{ backgroundColor: `${tableCellBackgroundColor}` }}
+                    >
                       {netIncome2023.toLocaleString().slice(0, -4)} 천원
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell
+                      align="center"
+                      sx={{ backgroundColor: `${tableCellBackgroundColor}` }}
+                    >
                       {totalCapital2022.toLocaleString().slice(0, -4)} 천원
                     </TableCell>
                     <TableCell align="center">
@@ -233,10 +243,16 @@ const StepThree: React.FC<StepThreeProps> = ({ rows }) => {
                     <TableCell align="center">
                       {totalCapital2021.toLocaleString().slice(0, -4)} 천원
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell
+                      align="center"
+                      sx={{ backgroundColor: `${tableCellBackgroundColor}` }}
+                    >
                       {netIncome2021.toLocaleString().slice(0, -4)} 천원
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell
+                      align="center"
+                      sx={{ backgroundColor: `${tableCellBackgroundColor}` }}
+                    >
                       {totalCapital2020.toLocaleString().slice(0, -4)} 천원
                     </TableCell>
                   </TableRow>
@@ -257,13 +273,19 @@ const StepThree: React.FC<StepThreeProps> = ({ rows }) => {
                   <TableCell align="center">{row.stockName}</TableCell>
                   <TableCell align="center">{row.stockCd}</TableCell>
 
-                  <TableCell align="center">
+                  <TableCell
+                    align="center"
+                    sx={{ backgroundColor: `${tableCellBackgroundColor}` }}
+                  >
                     {roe2023.toLocaleString()}
                   </TableCell>
                   <TableCell align="center">
                     {roe2022.toLocaleString()}
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell
+                    align="center"
+                    sx={{ backgroundColor: `${tableCellBackgroundColor}` }}
+                  >
                     {roe2021.toLocaleString()}
                   </TableCell>
                   <TableCell align="center">

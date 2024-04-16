@@ -169,7 +169,9 @@ const StockInfoTable: React.FC<StockInfoTableProps> = ({ rows }) => {
         <FinanceInfoDialog
           open={open}
           onClose={handleClose}
-          stockInfo={selectedStock}
+          corpCd={selectedStock?.corpCd}
+          stockCd={selectedStock?.stockCd}
+          stockName={selectedStock?.name}
           startYear={2021}
           endYear={2023}
         />

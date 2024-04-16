@@ -12,11 +12,16 @@ import {
   TablePagination,
   TableRow,
   Button,
+  tableCellClasses,
+  Zoom,
+  Card,
+  Typography,
 } from '@mui/material';
 import Config from '@/configs/config.export';
 import React, { useEffect, useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { StockFinanceInfo } from '../../../app/(DashboardLayout)/screening/StockFinanceInfo';
+import styled from '@emotion/styled';
 
 interface HeadCell {
   id: string;
@@ -69,48 +74,6 @@ const StepFive: React.FC<StepFiveProps> = ({ rows }) => {
   const [isCalculated, setIsCalculated] = useState(false);
   const rowsPerPage = 6;
 
-  const [searchTime, setSearchTime] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
-
-  const fetchData = async () => {
-    const stockCodeList = rows.map((row) => row.stockCd);
-
-    const url = `${Config().baseUrl}/screening/step5`;
-    const body = JSON.stringify({ stockCodeList });
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body,
-    };
-
-    const response = await fetch(url, options);
-
-    const data: ResponseData = await response.json();
-    data.openingPriceMap = new Map(Object.entries(data.openingPriceMap));
-    setSearchTime(data.searchTime);
-
-    rows.forEach((stock) => {
-      const openingPrice: number | undefined = data.openingPriceMap.get(
-        stock.stockCd,
-      );
-      if (openingPrice !== undefined) {
-        stock.openingPrice = openingPrice;
-      }
-    });
-
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    if (rows[0].openingPrice === undefined) {
-      fetchData().catch((error) => console.error(error));
-    } else {
-      setIsLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
     setIsCalculated(false);
   }, [rows]);
@@ -154,9 +117,15 @@ const StepFive: React.FC<StepFiveProps> = ({ rows }) => {
     setPage(newPage);
   };
 
-  return isLoading ? (
-    <div>Loading...</div>
-  ) : (
+  const CustomTableCell = styled(TableCell)(() => ({
+    [`&.${tableCellClasses.body}`]: {
+      textAlign: 'center',
+      paddingTop: '9px',
+      paddingBottom: '9px',
+    },
+  }));
+
+  return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Paper
@@ -187,7 +156,6 @@ const StepFive: React.FC<StepFiveProps> = ({ rows }) => {
           기대수익률 계산
         </Button>
       </Box>
-      조회시점 : {searchTime}
       <TableContainer>
         <Table sx={{ minWidth: 1000 }} aria-labelledby="tableTitle">
           <TableHead>
@@ -203,24 +171,30 @@ const StepFive: React.FC<StepFiveProps> = ({ rows }) => {
           <TableBody>
             {visibleRows.map((row) => (
               <TableRow key={row.stockName}>
-                <TableCell align="center">{row.stockName}</TableCell>
-                <TableCell align="center">{row.stockCd}</TableCell>
-                <TableCell align="center">
+                <CustomTableCell>{row.stockName}</CustomTableCell>
+                <CustomTableCell>{row.stockCd}</CustomTableCell>
+                <CustomTableCell>
                   {row.threeYearROEAvg.toLocaleString()}
-                </TableCell>
-                <TableCell align="center">{row.bps.toLocaleString()}</TableCell>
-                <TableCell align="center">
+                </CustomTableCell>
+                <CustomTableCell>{row.bps.toLocaleString()}</CustomTableCell>
+                <CustomTableCell>
                   {row.tenYearFutureValue.toLocaleString()}
-                </TableCell>
-                <TableCell align="center">
+                </CustomTableCell>
+                <CustomTableCell>
                   {row.openingPrice.toLocaleString()} 원
-                </TableCell>
-                <TableCell align="center">
-                  {row.expectedReturn
-                    ? (row.expectedReturn * 100).toFixed(2)
-                    : 0}{' '}
-                  %
-                </TableCell>
+                </CustomTableCell>
+                <CustomTableCell>
+                  <Zoom in={isCalculated}>
+                    <Card sx={{ py: '5px', my: '0' }}>
+                      <Typography variant="subtitle1" color="blue">
+                        {row.expectedReturn
+                          ? (row.expectedReturn * 100).toFixed(2)
+                          : 0}{' '}
+                        %
+                      </Typography>
+                    </Card>
+                  </Zoom>
+                </CustomTableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -26,6 +26,8 @@ import {
   AccordionSummary,
   AccordionDetails,
   Typography,
+  Zoom,
+  Card,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React, { useMemo, useState } from 'react';
@@ -33,6 +35,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ConditionSwitchWithToggle from '@/containers/screening/stepSix/ConditionSwitchWithToggle';
 import ConditionSwitch from '@/containers/screening/stepSix/ConditionSwitch';
 import { StockFinanceInfo } from '../../../app/(DashboardLayout)/screening/StockFinanceInfo';
+import FinanceInfoDialog from '@/components/dashboard/FinanceInfoDialog';
 
 interface HeadCell {
   id: string;
@@ -94,6 +97,11 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [targetRate, setTargetRate] = useState(15);
   const [filterOption, setFilterOption] = useState(1);
+  const [isFilterApplied, setIsFilterApplied] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const [selectedRow, setSelectedRow] = useState<StockFinanceInfo>();
+
   const rowsPerPage = 6;
 
   const [conditionOne, setConditionOne] = useState('>');
@@ -224,6 +232,9 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
     setIsEditing(!isEditing);
     if (isEditing !== false) {
       updateIsPropriate();
+      if (!isFilterApplied) {
+        setIsFilterApplied(true);
+      }
     }
   };
 
@@ -237,8 +248,26 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
     setPage(newPage);
   };
 
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+  };
+
+  const handleRowClick = (row: StockFinanceInfo) => {
+    setSelectedRow(row);
+    setIsDialogOpen(true);
+  };
+
   return (
     <Box sx={{ width: '100%' }}>
+      <FinanceInfoDialog
+        open={isDialogOpen}
+        onClose={handleDialogClose}
+        corpCd={selectedRow?.corpCd}
+        stockCd={selectedRow?.stockCd}
+        stockName={selectedRow?.stockName}
+        startYear={2021}
+        endYear={2023}
+      />
       <Accordion sx={{ width: '70%', minHeight: '40px' }}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -247,7 +276,7 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
           sx={{ m: 0 }}
         >
           <Typography variant="body1" color="primary">
-            종목 선정 조건 설정
+            종목 선정 조건 설정 {isFilterApplied ? '(적용중)' : '(미적용)'}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -260,7 +289,7 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
                 onClick={handleButtonClick}
                 sx={{ p: '2px' }}
               >
-                {isEditing ? '저장' : '수정'}
+                {isEditing ? '적용' : '수정'}
               </Button>
               <RadioGroup
                 value={filterOption}
@@ -388,7 +417,12 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
 
           <TableBody>
             {visibleRows.map((row) => (
-              <TableRow key={row.stockName}>
+              <TableRow
+                hover
+                key={row.stockCd}
+                sx={{ cursor: 'pointer' }}
+                onClick={() => handleRowClick(row)}
+              >
                 <TableCell align="center" sx={{ p: '8px' }}>
                   {row.stockName}
                 </TableCell>
@@ -408,7 +442,19 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
                   {(row.expectedReturn * 100).toFixed(2)} %
                 </TableCell>
                 <TableCell align="center" sx={{ p: '8px' }}>
-                  {row.isPropriate ? '적합' : '부적합'}
+                  <Zoom in={isFilterApplied}>
+                    <Card sx={{ py: '5px', my: '0' }}>
+                      {row.isPropriate ? (
+                        <Typography variant="subtitle1" color="red">
+                          GOOD
+                        </Typography>
+                      ) : (
+                        <Typography variant="subtitle1" color="blue">
+                          BAD
+                        </Typography>
+                      )}
+                    </Card>
+                  </Zoom>
                 </TableCell>
                 <TableCell align="center" sx={{ p: '8px' }}>
                   <Button

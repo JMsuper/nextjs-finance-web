@@ -26,6 +26,7 @@ import {
   CurrencyScaleOption,
   convertNumberScaleWithCurrency,
 } from '@/utils/NumberUtil';
+import { on } from 'events';
 
 interface FinanceInfo {
   year: number;
@@ -64,17 +65,12 @@ const headCells = [
   { id: 'netLoss', label: '당기순이익(손실)' },
 ];
 
-interface StockInfo {
-  name: string;
-  stockCd: string;
-  corpCd: string;
-  market: string;
-}
-
 interface DialogProps {
   open: boolean;
   onClose: () => void;
-  stockInfo: StockInfo | null;
+  stockCd?: string;
+  corpCd?: string;
+  stockName?: string;
   startYear: number;
   endYear: number;
 }
@@ -82,7 +78,9 @@ interface DialogProps {
 const FinanceInfoDialog: React.FC<DialogProps> = ({
   open,
   onClose,
-  stockInfo,
+  stockCd,
+  corpCd,
+  stockName,
   startYear,
   endYear,
 }: DialogProps) => {
@@ -92,7 +90,7 @@ const FinanceInfoDialog: React.FC<DialogProps> = ({
   useEffect(() => {
     let isMounted = true; // 마운트 상태 추적
 
-    const url = `${Config().baseUrl}/financeInfo/${stockInfo?.corpCd}?startYear=${startYear}&endYear=${endYear}`;
+    const url = `${Config().baseUrl}/financeInfo/${corpCd}?startYear=${startYear}&endYear=${endYear}`;
 
     const fetchData = async () => {
       try {
@@ -117,7 +115,7 @@ const FinanceInfoDialog: React.FC<DialogProps> = ({
     return () => {
       isMounted = false; // 컴포넌트 언마운트 시 상태 업데이트 방지
     };
-  }, [open, stockInfo, startYear, endYear]); // 의존성 배열에 url 구성 요소 추가
+  }, [open, startYear, endYear]); // 의존성 배열에 url 구성 요소 추가
 
   if (loading) {
     return (
@@ -130,7 +128,7 @@ const FinanceInfoDialog: React.FC<DialogProps> = ({
   if (rows.length === 0) {
     return (
       <Dialog open={open} onClose={onClose} maxWidth="xl">
-        <DialogTitle>{`${stockInfo?.name}`}</DialogTitle>
+        <DialogTitle>{`${stockName}`}</DialogTitle>
         <DialogContent>
           <DialogContentText>
             재무정보를 지원하지 않는 종목입니다.
@@ -155,10 +153,10 @@ const FinanceInfoDialog: React.FC<DialogProps> = ({
           alignItems="center"
         >
           <Typography variant="h6" color="initial">
-            {stockInfo?.name}
+            {stockName}
           </Typography>
 
-          <DartDetailLinkButton stockCd={stockInfo?.stockCd} />
+          <DartDetailLinkButton stockCd={stockCd} />
         </Stack>
       </DialogTitle>
       <DialogContent>

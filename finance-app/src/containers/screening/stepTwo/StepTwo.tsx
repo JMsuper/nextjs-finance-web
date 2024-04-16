@@ -12,10 +12,15 @@ import {
   TablePagination,
   TableRow,
   Button,
+  Zoom,
+  Typography,
+  Card,
+  tableCellClasses,
 } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { StockFinanceInfo } from '../../../app/(DashboardLayout)/screening/StockFinanceInfo';
+import styled from '@emotion/styled';
 
 interface HeadCell {
   id: string;
@@ -99,6 +104,14 @@ const StepTwo: React.FC<StepTwoProps> = ({ rows }) => {
     setPage(newPage);
   };
 
+  const CustomTableCell = styled(TableCell)(() => ({
+    [`&.${tableCellClasses.body}`]: {
+      textAlign: 'center',
+      paddingTop: '9px',
+      paddingBottom: '9px',
+    },
+  }));
+
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -145,20 +158,37 @@ const StepTwo: React.FC<StepTwoProps> = ({ rows }) => {
           <TableBody>
             {visibleRows.map((row) => (
               <TableRow key={row.stockName}>
-                <TableCell align="center">{row.stockName}</TableCell>
-                <TableCell align="center">{row.stockCd}</TableCell>
-                <TableCell align="center">
-                  {row.financeInfoList
-                    .filter((financeInfo) => financeInfo.year === 2023)[0]
-                    .totalCapital.toLocaleString()}{' '}
-                  원
-                </TableCell>
-                <TableCell align="center">
+                <CustomTableCell>
+                  <Typography variant="body2" color="initial">
+                    {row.stockName}
+                  </Typography>
+                </CustomTableCell>
+                <CustomTableCell>
+                  <Typography variant="body2" color="initial">
+                    {row.stockCd}
+                  </Typography>
+                </CustomTableCell>
+                <CustomTableCell>
+                  <Typography variant="body2" color="initial">
+                    {row.financeInfoList
+                      .filter((financeInfo) => financeInfo.year === 2023)[0]
+                      .totalCapital.toLocaleString()}{' '}
+                    원
+                  </Typography>
+                </CustomTableCell>
+                <CustomTableCell>
+                  <Typography variant="body2" color="initial"></Typography>
                   {row.shares.toLocaleString()} 주
-                </TableCell>
-                <TableCell align="center">
-                  {row.bps ? row.bps.toLocaleString() : '?'}
-                </TableCell>
+                </CustomTableCell>
+                <CustomTableCell>
+                  <Zoom in={isCalculated}>
+                    <Card sx={{ py: '5px', my: '0' }}>
+                      <Typography variant="subtitle1" color="blue">
+                        {row.bps ? row.bps.toLocaleString() : '?'}
+                      </Typography>
+                    </Card>
+                  </Zoom>
+                </CustomTableCell>
               </TableRow>
             ))}
           </TableBody>

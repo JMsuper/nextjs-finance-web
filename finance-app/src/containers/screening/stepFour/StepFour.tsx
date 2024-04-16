@@ -12,10 +12,15 @@ import {
   TablePagination,
   TableRow,
   Button,
+  Zoom,
+  Card,
+  Typography,
+  tableCellClasses,
 } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { StockFinanceInfo } from '../../../app/(DashboardLayout)/screening/StockFinanceInfo';
+import styled from '@emotion/styled';
 
 interface HeadCell {
   id: string;
@@ -105,6 +110,14 @@ const StepFour: React.FC<StepFourProps> = ({ rows }) => {
     setPage(newPage);
   };
 
+  const CustomTableCell = styled(TableCell)(() => ({
+    [`&.${tableCellClasses.body}`]: {
+      textAlign: 'center',
+      paddingTop: '9px',
+      paddingBottom: '9px',
+    },
+  }));
+
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -178,26 +191,30 @@ const StepFour: React.FC<StepFourProps> = ({ rows }) => {
 
               return (
                 <TableRow key={row.stockName}>
-                  <TableCell align="center">{row.stockName}</TableCell>
-                  <TableCell align="center">{row.stockCd}</TableCell>
-                  <TableCell align="center">{row.bps}</TableCell>
-                  <TableCell align="center">
+                  <CustomTableCell>{row.stockName}</CustomTableCell>
+                  <CustomTableCell>{row.stockCd}</CustomTableCell>
+                  <CustomTableCell>{row.bps}</CustomTableCell>
+                  <CustomTableCell>
                     {roe2023.toLocaleString()} {getDifference(roe2023, roe2022)}
-                  </TableCell>
-                  <TableCell align="center">
+                  </CustomTableCell>
+                  <CustomTableCell>
                     {roe2022.toLocaleString()} {getDifference(roe2022, roe2021)}
-                  </TableCell>
-                  <TableCell align="center">
-                    {roe2021.toLocaleString()}
-                  </TableCell>
-                  <TableCell align="center">
+                  </CustomTableCell>
+                  <CustomTableCell>{roe2021.toLocaleString()}</CustomTableCell>
+                  <CustomTableCell>
                     {row.threeYearROEAvg.toLocaleString()}
-                  </TableCell>
-                  <TableCell align="center">
-                    {row.tenYearFutureValue
-                      ? row.tenYearFutureValue.toLocaleString()
-                      : '?'}
-                  </TableCell>
+                  </CustomTableCell>
+                  <CustomTableCell>
+                    <Zoom in={isCalculated}>
+                      <Card sx={{ py: '5px', my: '0' }}>
+                        <Typography variant="subtitle1" color="blue">
+                          {row.tenYearFutureValue
+                            ? row.tenYearFutureValue.toLocaleString()
+                            : '?'}
+                        </Typography>
+                      </Card>
+                    </Zoom>
+                  </CustomTableCell>
                 </TableRow>
               );
             })}
