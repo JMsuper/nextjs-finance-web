@@ -163,8 +163,7 @@ const StockInfoTable: React.FC<StockInfoTableProps> = ({ rows }) => {
           </ListItem>
           <ListItem>
             <Typography variant="body2" color="initial">
-              조회 시점 :{' '}
-              {rows[0]?.searchTime && formatDate(rows[0].searchTime)}
+              🕒 {rows[0]?.searchTime && formatDate(rows[0].searchTime)} 기준
             </Typography>
           </ListItem>
         </List>
