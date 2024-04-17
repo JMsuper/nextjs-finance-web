@@ -13,7 +13,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Container, List, ListItem, Typography } from '@mui/material';
 import FinanceInfoDialog from './FinanceInfoDialog';
-import { formatDate } from '@/utils/NumberUtil';
+import { convertRiseAndFall, formatDate } from '@/utils/NumberUtil';
 
 interface StockPriceInfo {
   closingPrice: number;
@@ -54,10 +54,6 @@ const headCells: readonly HeadCell[] = [
     label: '시장',
   },
   {
-    id: 'closingPrice',
-    label: '종가',
-  },
-  {
     id: 'difference',
     label: '전일대비',
   },
@@ -66,8 +62,16 @@ const headCells: readonly HeadCell[] = [
     label: '등락률',
   },
   {
+    id: 'yesterdayClosingPrice',
+    label: '전일종가',
+  },
+  {
     id: 'openingPrice',
     label: '시가',
+  },
+  {
+    id: 'currrentPrice',
+    label: '현재가',
   },
 ];
 
@@ -211,18 +215,42 @@ const StockInfoTable: React.FC<StockInfoTableProps> = ({ rows }) => {
                     <TableCell align="center">{row.stockCd}</TableCell>
                     <TableCell align="center">{row.corpCd}</TableCell>
                     <TableCell align="center">{row.market}</TableCell>
-                    <TableCell align="center">
-                      {row.stockPriceInfo.closingPrice.toLocaleString()} 원
-                    </TableCell>
-                    <TableCell style={{ color: textColor }} align="center">
-                      {row.stockPriceInfo.difference.toLocaleString()}
-                    </TableCell>
-                    <TableCell style={{ color: textColor }} align="center">
-                      {row.stockPriceInfo.fluctuationRate} %
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.stockPriceInfo.openingPrice.toLocaleString()} 원
-                    </TableCell>
+
+                    {/* 거래중지 종목에 대해서는 주가를 제공하지 않음 */}
+                    {row.stockPriceInfo.openingPrice === 0 ? (
+                      <>
+                        <TableCell align="center">-</TableCell>
+                        <TableCell align="center">-</TableCell>
+                        <TableCell align="center">-</TableCell>
+                        <TableCell align="center">-</TableCell>
+                        <TableCell align="center">-</TableCell>
+                      </>
+                    ) : (
+                      <>
+                        <TableCell style={{ color: textColor }} align="center">
+                          {convertRiseAndFall(row.stockPriceInfo.difference)}
+                        </TableCell>
+                        <TableCell style={{ color: textColor }} align="center">
+                          {convertRiseAndFall(
+                            row.stockPriceInfo.fluctuationRate,
+                          )}{' '}
+                          %
+                        </TableCell>
+                        <TableCell align="center">
+                          {(
+                            row.stockPriceInfo.closingPrice -
+                            row.stockPriceInfo.difference
+                          ).toLocaleString()}{' '}
+                          원
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.stockPriceInfo.openingPrice.toLocaleString()} 원
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.stockPriceInfo.closingPrice.toLocaleString()} 원
+                        </TableCell>
+                      </>
+                    )}
                   </TableRow>
                 );
               })}

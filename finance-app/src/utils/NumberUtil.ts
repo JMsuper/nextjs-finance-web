@@ -33,3 +33,16 @@ export const convertNumberScaleWithCurrency = (
       return '';
   }
 };
+
+export const convertRiseAndFall = (value: number) => {
+  if (value === 0) {
+    return value.toLocaleString();
+  }
+
+  if (value > 0) {
+    return `▲ ${value.toLocaleString()}`;
+  } else {
+    value = value * -1;
+    return `▼ ${value.toLocaleString()}`;
+  }
+};
