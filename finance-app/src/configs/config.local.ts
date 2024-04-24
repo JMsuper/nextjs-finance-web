@@ -1,6 +1,6 @@
 import getConfigs from './config.common';
 
-const baseUrl = 'http://localhost:80';
+const baseUrl = 'http://localhost:8080';
 const mode = 'local';
 
 const configLocal = getConfigs({ baseUrl, mode });

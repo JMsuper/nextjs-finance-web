@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import Link from "next/link";
+import React, { useState } from 'react';
+import Link from 'next/link';
 import {
   Avatar,
   Box,
@@ -9,12 +9,18 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
-} from "@mui/material";
+} from '@mui/material';
 
-import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
+import { IconListCheck, IconMail, IconUser } from '@tabler/icons-react';
+import Config from '@/configs/config.export';
+import { useRecoilState } from 'recoil';
+import { AuthState, IAuthState } from '@/app/authentication/auth/AuthState';
+import { handleLogout } from '@/utils/eventHandler';
 
 const Profile = () => {
   const [anchorEl2, setAnchorEl2] = useState(null);
+  const [authState, setAuthState] = useRecoilState(AuthState);
+
   const handleClick2 = (event: any) => {
     setAnchorEl2(event.currentTarget);
   };
@@ -31,8 +37,8 @@ const Profile = () => {
         aria-controls="msgs-menu"
         aria-haspopup="true"
         sx={{
-          ...(typeof anchorEl2 === "object" && {
-            color: "primary.main",
+          ...(typeof anchorEl2 === 'object' && {
+            color: 'primary.main',
           }),
         }}
         onClick={handleClick2}
@@ -49,50 +55,85 @@ const Profile = () => {
       {/* ------------------------------------------- */}
       {/* Message Dropdown */}
       {/* ------------------------------------------- */}
-      <Menu
-        id="msgs-menu"
-        anchorEl={anchorEl2}
-        keepMounted
-        open={Boolean(anchorEl2)}
-        onClose={handleClose2}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        sx={{
-          "& .MuiMenu-paper": {
-            width: "200px",
-          },
-        }}
-      >
-        <MenuItem>
-          <ListItemIcon>
-            <IconUser width={20} />
-          </ListItemIcon>
-          <ListItemText>My Profile</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <IconMail width={20} />
-          </ListItemIcon>
-          <ListItemText>My Account</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <IconListCheck width={20} />
-          </ListItemIcon>
-          <ListItemText>My Tasks</ListItemText>
-        </MenuItem>
-        <Box mt={1} py={1} px={2}>
-          <Button
-            href="/authentication/login"
-            variant="outlined"
-            color="primary"
-            component={Link}
-            fullWidth
-          >
-            Logout
-          </Button>
-        </Box>
-      </Menu>
+      {authState.isLogin ? (
+        <Menu
+          id="msgs-menu"
+          anchorEl={anchorEl2}
+          keepMounted
+          open={Boolean(anchorEl2)}
+          onClose={handleClose2}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+          sx={{
+            '& .MuiMenu-paper': {
+              width: '200px',
+            },
+          }}
+        >
+          <MenuItem>
+            <ListItemIcon>
+              <IconUser width={20} />
+            </ListItemIcon>
+            <ListItemText>내 정보</ListItemText>
+          </MenuItem>
+          <MenuItem>
+            <ListItemIcon>
+              <IconListCheck width={20} />
+            </ListItemIcon>
+            <ListItemText>저장 종목 관리</ListItemText>
+          </MenuItem>
+          <Box mt={1} py={1} px={2}>
+            <Button
+              variant="outlined"
+              color="primary"
+              fullWidth
+              onClick={() => {
+                handleLogout({ setAuthState });
+              }}
+            >
+              로그아웃
+            </Button>
+          </Box>
+        </Menu>
+      ) : (
+        <Menu
+          id="msgs-menu"
+          anchorEl={anchorEl2}
+          keepMounted
+          open={Boolean(anchorEl2)}
+          onClose={handleClose2}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+          sx={{
+            '& .MuiMenu-paper': {
+              width: '200px',
+            },
+          }}
+        >
+          <Box mt={1} py={1} px={2}>
+            <Button
+              variant="outlined"
+              color="primary"
+              fullWidth
+              href="/authentication/login"
+              component={Link}
+            >
+              로그인
+            </Button>
+          </Box>
+          <Box mt={1} py={1} px={2}>
+            <Button
+              variant="outlined"
+              color="primary"
+              fullWidth
+              href="/authentication/register"
+              component={Link}
+            >
+              회원가입
+            </Button>
+          </Box>
+        </Menu>
+      )}
     </Box>
   );
 };

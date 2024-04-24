@@ -55,7 +55,7 @@ const Login2 = () => (
                   color="textSecondary"
                   mb={1}
                 >
-                  Your Social Campaigns
+                  로그인하여 눈덩이 주식 서비스를 이용해보세요.
                 </Typography>
               }
               subtitle={
@@ -70,7 +70,7 @@ const Login2 = () => (
                     variant="h6"
                     fontWeight="500"
                   >
-                    New to Modernize?
+                    서비스 이용이 처음이신가요?
                   </Typography>
                   <Typography
                     component={Link}
@@ -81,7 +81,7 @@ const Login2 = () => (
                       color: 'primary.main',
                     }}
                   >
-                    Create an account
+                    회원가입
                   </Typography>
                 </Stack>
               }

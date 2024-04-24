@@ -142,9 +142,6 @@ const StockInfoTable: React.FC<StockInfoTableProps> = ({ rows }) => {
     [filterdRows, page, rowsPerPage],
   );
 
-  console.log(rows[0]?.searchTime);
-  console.log(typeof rows[0]?.searchTime);
-
   return (
     <Box sx={{ width: '100%' }}>
       <Box

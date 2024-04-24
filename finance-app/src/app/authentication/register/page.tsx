@@ -54,7 +54,7 @@ const Register2 = () => (
                   color="textSecondary"
                   mb={1}
                 >
-                  Your Social Campaigns
+                  회원가입하여 눈덩이 주식 서비스를 이용해보세요.
                 </Typography>
               }
               subtitle={
@@ -69,7 +69,7 @@ const Register2 = () => (
                     variant="h6"
                     fontWeight="400"
                   >
-                    Already have an Account?
+                    이미 계정이 있으신가요?
                   </Typography>
                   <Typography
                     component={Link}
@@ -80,7 +80,7 @@ const Register2 = () => (
                       color: 'primary.main',
                     }}
                   >
-                    Sign In
+                    로그인
                   </Typography>
                 </Stack>
               }

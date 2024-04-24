@@ -1,6 +1,6 @@
-import { useMediaQuery, Box, Drawer } from "@mui/material";
-import Logo from "../shared/logo/Logo";
-import SidebarItems from "./SidebarItems";
+import { useMediaQuery, Box, Drawer } from '@mui/material';
+import Logo from '../shared/logo/Logo';
+import SidebarItems from './SidebarItems';
 
 interface ItemType {
   isMobileSidebarOpen: boolean;
@@ -13,9 +13,9 @@ const Sidebar = ({
   onSidebarClose,
   isSidebarOpen,
 }: ItemType) => {
-  const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"));
+  const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
 
-  const sidebarWidth = "270px";
+  const sidebarWidth = '270px';
 
   if (lgUp) {
     return (
@@ -35,7 +35,7 @@ const Sidebar = ({
           PaperProps={{
             sx: {
               width: sidebarWidth,
-              boxSizing: "border-box",
+              boxSizing: 'border-box',
             },
           }}
         >
@@ -44,13 +44,18 @@ const Sidebar = ({
           {/* ------------------------------------------- */}
           <Box
             sx={{
-              height: "100%",
+              height: '100%',
             }}
           >
             {/* ------------------------------------------- */}
             {/* Logo */}
             {/* ------------------------------------------- */}
-            <Box px={3}>
+            <Box
+              px={3}
+              display="flex"
+              alignContent="center"
+              justifyContent="center"
+            >
               <Logo />
             </Box>
             <Box>

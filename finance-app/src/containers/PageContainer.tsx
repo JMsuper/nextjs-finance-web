@@ -1,5 +1,6 @@
 'use client';
 
+import { Box } from '@mui/material';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 type Props = {
@@ -10,13 +11,13 @@ type Props = {
 
 const PageContainer = ({ title, description, children }: Props) => (
   <HelmetProvider>
-    <div>
+    <Box>
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={description} />
       </Helmet>
       {children}
-    </div>
+    </Box>
   </HelmetProvider>
 );
 
