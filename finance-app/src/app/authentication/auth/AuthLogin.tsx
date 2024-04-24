@@ -22,8 +22,8 @@ interface loginType {
 }
 
 interface ILoginResponse {
-  id: number;
-  username: string;
+  id: string;
+  email: string;
   role: string;
 }
 
@@ -75,9 +75,9 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
         if (response.ok) {
           response.json().then((data: ILoginResponse) => {
             let newAuthState: IAuthState = {
-              userId: data.id,
+              id: data.id,
               isLogin: true,
-              userName: data.username,
+              email: data.email,
             };
             setAuthState(newAuthState);
             window.location.href = '/';

@@ -201,7 +201,7 @@ const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
             Password Check
           </Typography>
           <CustomTextField
-            id="password"
+            id="password-check"
             variant="outlined"
             type="password"
             fullWidth

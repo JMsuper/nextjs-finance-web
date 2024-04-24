@@ -7,12 +7,12 @@ import {
   IconReport,
   IconSearch,
   IconSettings,
+  IconUserEdit,
   IconUserPlus,
   IconZoomCode,
 } from '@tabler/icons-react';
 
 import { uniqueId } from 'lodash';
-import { useRecoilState } from 'recoil';
 
 export const NoLoginMenuitems = [
   {
@@ -125,5 +125,11 @@ export const LoginMenuitems = [
     title: '알리미/구독 관리',
     icon: IconSettings,
     href: '/mypage/services-management',
+  },
+  {
+    id: uniqueId(),
+    title: '내 정보',
+    icon: IconUserEdit,
+    href: '/mypage/user-info',
   },
 ];

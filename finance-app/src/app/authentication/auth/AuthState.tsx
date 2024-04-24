@@ -11,12 +11,12 @@ const { persistAtom } = recoilPersist({
 
 export interface IAuthState {
   isLogin: boolean;
-  userId: number;
-  userName: string;
+  id: string;
+  email: string;
 }
 
 export const AuthState = atom<IAuthState>({
   key: 'AuthState',
-  default: { isLogin: false, userId: 0, userName: '' },
+  default: { isLogin: false, id: '', email: '' },
   effects_UNSTABLE: [persistAtom],
 });
