@@ -22,6 +22,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { StockFinanceInfo } from '../../../app/(DashboardLayout)/screening/StockFinanceInfo';
 import styled from '@emotion/styled';
+import { calculateExpectedRate } from '@/utils/FinanceCalculator';
 
 interface HeadCell {
   id: string;
@@ -98,7 +99,7 @@ const StepFive: React.FC<StepFiveProps> = ({ rows }) => {
     if (openingPrice === undefined || openingPrice === 0) {
       return 0;
     }
-    return (stock.tenYearFutureValue / openingPrice) ** (1 / 10) - 1;
+    return calculateExpectedRate(stock.tenYearFutureValue, openingPrice);
   };
 
   const calculateAllFutureValue = () => {
@@ -187,10 +188,7 @@ const StepFive: React.FC<StepFiveProps> = ({ rows }) => {
                   <Zoom in={isCalculated}>
                     <Card sx={{ py: '5px', my: '0' }}>
                       <Typography variant="subtitle1" color="blue">
-                        {row.expectedReturn
-                          ? (row.expectedReturn * 100).toFixed(2)
-                          : 0}{' '}
-                        %
+                        {row.expectedReturn ? row.expectedReturn : 0} %
                       </Typography>
                     </Card>
                   </Zoom>

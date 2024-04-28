@@ -57,7 +57,7 @@ const UserInfoContainer: React.FC = () => {
           mb="5px"
           mt="25px"
         >
-          Email Address
+          Email
         </Typography>
         <CustomTextField
           id="email"

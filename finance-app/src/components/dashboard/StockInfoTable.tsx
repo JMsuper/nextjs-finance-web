@@ -14,22 +14,8 @@ import Paper from '@mui/material/Paper';
 import { Container, List, ListItem, Typography } from '@mui/material';
 import FinanceInfoDialog from './FinanceInfoDialog';
 import { convertRiseAndFall, formatDate } from '@/utils/NumberUtil';
-
-interface StockPriceInfo {
-  closingPrice: number;
-  difference: number;
-  fluctuationRate: number;
-  openingPrice: number;
-}
-
-interface StockInfo {
-  searchTime: string;
-  name: string;
-  stockCd: string;
-  corpCd: string;
-  market: string;
-  stockPriceInfo: StockPriceInfo;
-}
+import { SaveStockButton } from '../shared/SaveStockButton';
+import { StockInfo } from '../shared/StockInfo';
 
 interface HeadCell {
   id: string;
@@ -72,6 +58,10 @@ const headCells: readonly HeadCell[] = [
   {
     id: 'currrentPrice',
     label: '현재가',
+  },
+  {
+    id: 'saveStock',
+    label: '관심종목 등록',
   },
 ];
 
@@ -244,6 +234,12 @@ const StockInfoTable: React.FC<StockInfoTableProps> = ({ rows }) => {
                         </TableCell>
                         <TableCell align="center">
                           {row.stockPriceInfo.closingPrice.toLocaleString()} 원
+                        </TableCell>
+                        <TableCell align="center">
+                          <SaveStockButton
+                            corpCode={row.corpCd}
+                            stockName={row.name}
+                          />
                         </TableCell>
                       </>
                     )}

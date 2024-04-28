@@ -41,6 +41,7 @@ import ConditionSwitchWithToggle from '@/containers/screening/stepSix/ConditionS
 import ConditionSwitch from '@/containers/screening/stepSix/ConditionSwitch';
 import { StockFinanceInfo } from '../../../app/(DashboardLayout)/screening/StockFinanceInfo';
 import FinanceInfoDialog from '@/components/dashboard/FinanceInfoDialog';
+import { SaveStockButton } from '@/components/shared/SaveStockButton';
 
 interface HeadCell {
   id: string;
@@ -103,8 +104,8 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
   const [targetRate, setTargetRate] = useState(15);
   const [filterOption, setFilterOption] = useState(1);
   const [isFilterApplied, setIsFilterApplied] = useState(false);
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
 
   const [selectedRow, setSelectedRow] = useState<StockFinanceInfo>();
 
@@ -202,16 +203,15 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
   );
 
   const isSuitable = (row: StockFinanceInfo) => {
-    const targetRateToFloating = targetRate / 100;
-    if (toggleConditionOne && row.expectedReturn < targetRateToFloating) {
+    if (toggleConditionOne && row.expectedReturn < targetRate) {
       return false;
     }
     if (toggleConditionTwo) {
       if (conditionOne === '>') {
-        if (row.threeYearROEAvg < targetRateToFloating) {
+        if (row.threeYearROEAvg < targetRate) {
           return false;
         }
-      } else if (row.threeYearROEAvg > targetRateToFloating) {
+      } else if (row.threeYearROEAvg > targetRate) {
         return false;
       }
     }
@@ -274,26 +274,6 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
         startYear={2021}
         endYear={2023}
       />
-      <Dialog
-        open={isSaveDialogOpen}
-        onClose={() => setIsSaveDialogOpen(false)}
-      >
-        <DialogTitle id="alert-dialog-title">
-          {'종목을 저장하시겠습니까?'}
-        </DialogTitle>
-        <DialogActions>
-          <Button onClick={() => setIsSaveDialogOpen(false)}>아니요</Button>
-          <Button
-            onClick={() => {
-              setIsSaveDialogOpen(false);
-            }}
-            autoFocus
-          >
-            네
-          </Button>
-        </DialogActions>
-      </Dialog>
-      ;
       <Accordion sx={{ width: '70%', minHeight: '40px' }}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -463,7 +443,7 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
                   {row.openingPrice.toLocaleString()} 원
                 </TableCell>
                 <TableCell align="center" sx={{ p: '8px' }}>
-                  {(row.expectedReturn * 100).toFixed(2)} %
+                  {row.expectedReturn} %
                 </TableCell>
                 <TableCell align="center" sx={{ p: '8px' }}>
                   <Zoom in={isFilterApplied}>
@@ -481,17 +461,10 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
                   </Zoom>
                 </TableCell>
                 <TableCell align="center" sx={{ p: '8px' }}>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    color="primary"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      setIsSaveDialogOpen(true);
-                    }}
-                  >
-                    저장
-                  </Button>
+                  <SaveStockButton
+                    stockName={row.stockName}
+                    corpCode={row.corpCd}
+                  />
                 </TableCell>
               </TableRow>
             ))}

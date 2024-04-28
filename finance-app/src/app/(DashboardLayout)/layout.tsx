@@ -1,9 +1,16 @@
 'use client';
 
 import { styled, Container, Box } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '@/app/(DashboardLayout)/layout/header/Header';
 import Sidebar from '@/app/(DashboardLayout)/layout/sidebar/Sidebar';
+import {
+  AuthState,
+  IAuthState,
+  authKeyName,
+} from '../authentication/auth/AuthState';
+import Config from '@/configs/config.export';
+import { useRecoilState } from 'recoil';
 
 const MainWrapper = styled('div')(() => ({
   display: 'flex',
@@ -29,6 +36,31 @@ const RootLayout: React.FC<RootLayoutProps> = ({
 }: RootLayoutProps) => {
   const [isSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
+  const [authState, setAuthState] = useRecoilState(AuthState);
+
+  useEffect(() => {
+    if (!authState.isLogin) {
+      const requestUrl = `${Config().baseUrl}/api/auto-login`;
+
+      fetch(requestUrl, {
+        method: 'GET',
+        credentials: 'include',
+      }).then((response) => {
+        if (response.ok) {
+          response.json().then((data) => {
+            let newAuthState: IAuthState = {
+              id: data.id,
+              isLogin: true,
+              email: data.email,
+            };
+            setAuthState(newAuthState);
+          });
+        }
+      });
+    }
+  }, []);
+
   return (
     <MainWrapper className="mainwrapper">
       {/* ------------------------------------------- */}

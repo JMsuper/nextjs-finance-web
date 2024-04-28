@@ -1,12 +1,14 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
-const sessionStorage =
-  typeof window !== 'undefined' ? window.sessionStorage : undefined;
+const localStorage =
+  typeof window !== 'undefined' ? window.localStorage : undefined;
+
+export const authKeyName = 'login-persist';
 
 const { persistAtom } = recoilPersist({
-  key: 'login-persist',
-  storage: sessionStorage,
+  key: authKeyName,
+  storage: localStorage,
 });
 
 export interface IAuthState {

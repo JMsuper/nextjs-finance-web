@@ -21,6 +21,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { StockFinanceInfo } from '../../../app/(DashboardLayout)/screening/StockFinanceInfo';
 import styled from '@emotion/styled';
+import { calculateFutureValue } from '@/utils/FinanceCalculator';
 
 interface HeadCell {
   id: string;
@@ -91,9 +92,6 @@ const StepFour: React.FC<StepFourProps> = ({ rows }) => {
     [filteredRows, page, rowsPerPage],
   );
 
-  const calculateFutureValue = (stock: StockFinanceInfo) =>
-    Math.round(stock.bps * (1 + stock.threeYearROEAvg) ** 10);
-
   const calculateAllFutureValue = () => {
     if (isCalculated) {
       alert('이미 계산되었습니다.');
@@ -101,7 +99,10 @@ const StepFour: React.FC<StepFourProps> = ({ rows }) => {
     }
     alert('10년 후 주당순자산 가치를 계산합니다.');
     rows.forEach((stock: StockFinanceInfo) => {
-      stock.tenYearFutureValue = calculateFutureValue(stock);
+      stock.tenYearFutureValue = calculateFutureValue(
+        stock.bps,
+        stock.threeYearROEAvg,
+      );
     });
     setIsCalculated(true);
   };

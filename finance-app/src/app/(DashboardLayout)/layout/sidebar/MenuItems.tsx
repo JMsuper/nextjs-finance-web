@@ -21,15 +21,9 @@ export const NoLoginMenuitems = [
   },
   {
     id: uniqueId(),
-    title: '서비스 소개',
-    icon: IconLayoutDashboard,
-    href: '/',
-  },
-  {
-    id: uniqueId(),
     title: '주식 상장사 검색',
     icon: IconSearch,
-    href: '/search',
+    href: '/',
   },
   {
     id: uniqueId(),
@@ -40,6 +34,12 @@ export const NoLoginMenuitems = [
   {
     navlabel: true,
     subheader: 'Services',
+  },
+  {
+    id: uniqueId(),
+    title: '서비스 소개',
+    icon: IconLayoutDashboard,
+    href: '/services/introduction',
   },
   {
     id: uniqueId(),
@@ -78,15 +78,9 @@ export const LoginMenuitems = [
   },
   {
     id: uniqueId(),
-    title: '서비스 소개',
-    icon: IconLayoutDashboard,
-    href: '/',
-  },
-  {
-    id: uniqueId(),
     title: '주식 상장사 검색',
     icon: IconSearch,
-    href: '/search',
+    href: '/',
   },
   {
     id: uniqueId(),
@@ -97,6 +91,12 @@ export const LoginMenuitems = [
   {
     navlabel: true,
     subheader: 'Services',
+  },
+  {
+    id: uniqueId(),
+    title: '서비스 소개',
+    icon: IconLayoutDashboard,
+    href: '/services/introduction',
   },
   {
     id: uniqueId(),
@@ -116,9 +116,9 @@ export const LoginMenuitems = [
   },
   {
     id: uniqueId(),
-    title: '저장 종목조회',
+    title: '관심종목',
     icon: IconListSearch,
-    href: '/mypage/search-save-stock',
+    href: '/mypage/save-stock',
   },
   {
     id: uniqueId(),

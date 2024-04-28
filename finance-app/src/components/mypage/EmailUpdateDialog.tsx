@@ -96,12 +96,11 @@ export const EmailUpdateDialog = ({
         <CustomTextField
           id="email"
           variant="outlined"
-          fullWidth
           error={emailError}
           helperText={emailError ? '이메일 형식으로 입력해주세요.' : ''}
           value={updatedEmail}
           onChange={handleEmailChange}
-          sx={{ mt: 3 }}
+          sx={{ mt: 3, width: '350px' }}
         />
       </DialogContent>
       {!isSaveButtonClicked ? (

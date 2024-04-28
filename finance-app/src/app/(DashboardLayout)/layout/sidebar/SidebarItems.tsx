@@ -18,7 +18,6 @@ const SidebarItems = ({ toggleMobileSidebar }: any) => {
   } else {
     Menuitems = NoLoginMenuitems;
   }
-  console.log(authState);
 
   return (
     <Box sx={{ px: 3 }}>

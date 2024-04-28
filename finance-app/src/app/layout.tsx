@@ -9,17 +9,19 @@ interface RootLayoutProps {
   children: React.ReactNode;
 }
 
-const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
-  <html lang="en">
-    <body>
-      <RecoilRoot>
-        <ThemeProvider theme={baselightTheme}>
-          <CssBaseline />
-          {children}
-        </ThemeProvider>
-      </RecoilRoot>
-    </body>
-  </html>
-);
+const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
+  return (
+    <html lang="en">
+      <body>
+        <RecoilRoot>
+          <ThemeProvider theme={baselightTheme}>
+            <CssBaseline />
+            {children}
+          </ThemeProvider>
+        </RecoilRoot>
+      </body>
+    </html>
+  );
+};
 
 export default RootLayout;
