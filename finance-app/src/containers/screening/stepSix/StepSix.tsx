@@ -28,11 +28,7 @@ import {
   Typography,
   Zoom,
   Card,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
+  InputAdornment,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React, { useMemo, useState } from 'react';
@@ -203,15 +199,17 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
   );
 
   const isSuitable = (row: StockFinanceInfo) => {
-    if (toggleConditionOne && row.expectedReturn < targetRate) {
-      return false;
+    if (toggleConditionOne) {
+      if (row.expectedReturn < targetRate) {
+        return false;
+      }
     }
     if (toggleConditionTwo) {
       if (conditionOne === '>') {
-        if (row.threeYearROEAvg < targetRate) {
+        if (row.threeYearROEAvg < targetRate / 100) {
           return false;
         }
-      } else if (row.threeYearROEAvg > targetRate) {
+      } else if (row.threeYearROEAvg > targetRate / 100) {
         return false;
       }
     }
@@ -339,6 +337,13 @@ const StepSix: React.FC<StepSixProps> = ({ rows }) => {
                     defaultValue={targetRate}
                     size="small"
                     disabled={!isEditing || !toggleConditionOne}
+                    inputProps={{
+                      min: 0,
+                      max: 100,
+                      endAdornment: (
+                        <InputAdornment position="end">%</InputAdornment>
+                      ),
+                    }}
                     sx={{ width: '80px' }}
                   />
                 </ConditionSwitch>

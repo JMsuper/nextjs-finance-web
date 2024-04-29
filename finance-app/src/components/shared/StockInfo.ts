@@ -3,6 +3,7 @@ export interface StockPriceInfo {
   difference: number;
   fluctuationRate: number;
   openingPrice: number;
+  currentPrice: number;
 }
 
 export interface StockInfo {
@@ -26,4 +27,14 @@ export interface SaveStockInfo {
   bps: number;
   afterTenYearsAverageROE: number;
   stockPriceInfo: StockPriceInfo;
+  reportList: DisclosureReport[];
+}
+
+export interface DisclosureReport {
+  corpName: string;
+  reportNm: string;
+  rceptNo: string;
+  flrNm: string;
+  rceptDt: string;
+  rm: string;
 }

@@ -3,13 +3,14 @@
 import PageContainer from '@/containers/PageContainer';
 import Typography from '@mui/material/Typography';
 import DashboardCard from '../../components/shared/DashboardCard';
-import { SaveStockPage } from '@/components/mypage/SaveStockPage';
-import useFetch from '@/hooks/useFetch';
+import { SaveStockContainer } from '@/containers/mypage/SaveStockContainer';
 import Config from '@/configs/config.export';
-import { StockInfo } from '@/components/shared/StockInfo';
+import { SaveStockInfo } from '@/components/shared/StockInfo';
 import { useEffect, useState } from 'react';
 const SearchSaveStockPage: React.FC = () => {
-  const [savedStockInfoList, setSavedStockInfoList] = useState<StockInfo[]>([]);
+  const [savedStockInfoList, setSavedStockInfoList] = useState<SaveStockInfo[]>(
+    [],
+  );
 
   useEffect(() => {
     console.log('useEffect');
@@ -32,8 +33,8 @@ const SearchSaveStockPage: React.FC = () => {
 
   return (
     <PageContainer title="관심종목" description="관심종목">
-      <DashboardCard title="관심종목">
-        <SaveStockPage savedStockInfoList={savedStockInfoList} />
+      <DashboardCard>
+        <SaveStockContainer savedStockInfoList={savedStockInfoList} />
       </DashboardCard>
     </PageContainer>
   );
