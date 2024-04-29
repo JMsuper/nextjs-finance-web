@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Grid, TextField, Button, Box, Stack, Typography } from '@mui/material';
 import CustomTextField from '@/components/shared/CustomTextField';
-import { SimpleBackdrop } from '@/components/shared/SimpleBackDrop';
 import { useRecoilState } from 'recoil';
 import { AuthState } from '@/app/authentication/auth/AuthState';
 import { EmailUpdateDialog } from '@/components/mypage/EmailUpdateDialog';
 import { PasswordUpdateDialog } from '@/components/mypage/PasswordUpdateDialog';
+import { SimpleBackdrop } from '@/components/shared/SimpleBackdrop';
 
 const UserInfoContainer: React.FC = () => {
   const [authState, setAuthState] = useRecoilState(AuthState);

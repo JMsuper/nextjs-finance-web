@@ -13,7 +13,7 @@ import CustomTextField from '@/components/shared/CustomTextField';
 import { useRecoilState } from 'recoil';
 import { AuthState, IAuthState } from './AuthState';
 import Config from '@/configs/config.export';
-import { SimpleBackdrop } from '@/components/shared/SimpleBackDrop';
+import { SimpleBackdrop } from '@/components/shared/SimpleBackdrop';
 
 interface loginType {
   title?: string;

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Stack } from '@mui/system';
 import CustomTextField from '@/components/shared/CustomTextField';
 import Config from '@/configs/config.export';
-import { SimpleBackdrop } from '@/components/shared/SimpleBackDrop';
+import { SimpleBackdrop } from '@/components/shared/SimpleBackdrop';
 
 interface registerType {
   title?: string;
