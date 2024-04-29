@@ -1,5 +1,5 @@
 import { useMediaQuery, Box, Drawer } from '@mui/material';
-import Logo from '../shared/logo/Logo';
+import Logo from '../../../../components/shared/Logo';
 import SidebarItems from './SidebarItems';
 
 interface ItemType {
