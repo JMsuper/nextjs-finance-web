@@ -22,7 +22,7 @@ import StepTwo from '@/containers/screening/stepTwo/StepTwo';
 import StepFour from '@/containers/screening/stepFour/StepFour';
 import StepFive from '@/containers/screening/stepFive/StepFive';
 import StepSix from '@/containers/screening/stepSix/StepSix';
-import DashboardCard from '../components/shared/DashboardCard';
+import DashboardCard from '../../../components/shared/DashboardCard';
 import { StockFinanceInfo } from './StockFinanceInfo';
 
 const ScreeningLayout = () => {

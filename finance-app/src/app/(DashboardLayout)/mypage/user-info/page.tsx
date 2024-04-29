@@ -2,7 +2,7 @@
 
 import PageContainer from '@/containers/PageContainer';
 import Typography from '@mui/material/Typography';
-import DashboardCard from '../../components/shared/DashboardCard';
+import DashboardCard from '../../../../components/shared/DashboardCard';
 import UserInfoContainer from '@/containers/mypage/UserInfoContainer';
 const ServicesManagementPage: React.FC = () => {
   return (

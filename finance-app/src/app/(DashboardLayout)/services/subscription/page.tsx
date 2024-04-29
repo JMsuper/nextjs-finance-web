@@ -2,7 +2,7 @@
 
 import PageContainer from '@/containers/PageContainer';
 import Typography from '@mui/material/Typography';
-import DashboardCard from '../../components/shared/DashboardCard';
+import DashboardCard from '../../../../components/shared/DashboardCard';
 const SubscriptionPage: React.FC = () => {
   return (
     <PageContainer title="종목 정보 구독" description="종목 정보 구독">

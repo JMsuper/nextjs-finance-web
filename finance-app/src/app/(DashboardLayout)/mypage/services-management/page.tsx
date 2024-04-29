@@ -2,7 +2,7 @@
 
 import PageContainer from '@/containers/PageContainer';
 import Typography from '@mui/material/Typography';
-import DashboardCard from '../../components/shared/DashboardCard';
+import DashboardCard from '../../../../components/shared/DashboardCard';
 const ServicesManagementPage: React.FC = () => {
   return (
     <PageContainer title="알리미/구독 관리" description="알리미/구독 관리">

@@ -2,7 +2,7 @@
 
 import PageContainer from '@/containers/PageContainer';
 import Typography from '@mui/material/Typography';
-import DashboardCard from '../../components/shared/DashboardCard';
+import DashboardCard from '../../../../components/shared/DashboardCard';
 import { SaveStockContainer } from '@/containers/mypage/SaveStockContainer';
 import Config from '@/configs/config.export';
 import { SaveStockInfo } from '@/components/shared/StockInfo';

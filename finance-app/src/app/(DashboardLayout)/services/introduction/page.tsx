@@ -2,7 +2,7 @@
 
 import { Box, List, ListItem, Typography } from '@mui/material';
 import PageContainer from '@/containers/PageContainer';
-import DashboardCard from '../../components/shared/DashboardCard';
+import DashboardCard from '../../../../components/shared/DashboardCard';
 
 const IntroductionPage: React.FC = () => (
   <PageContainer title="Dashboard" description="this is Dashboard">

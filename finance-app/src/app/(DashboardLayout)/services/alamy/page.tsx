@@ -2,7 +2,7 @@
 
 import PageContainer from '@/containers/PageContainer';
 import Typography from '@mui/material/Typography';
-import DashboardCard from '../../components/shared/DashboardCard';
+import DashboardCard from '../../../../components/shared/DashboardCard';
 const AlamyPage: React.FC = () => {
   return (
     <PageContainer title="매수/매도 알리미" description="매수/매도 알리미">
