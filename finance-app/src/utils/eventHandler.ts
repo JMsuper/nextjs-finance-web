@@ -17,8 +17,8 @@ export const handleLogout = ({ setAuthState }: ILogoutProps) => {
       if (res.ok) {
         let newAuthState: IAuthState = {
           isLogin: false,
-          userId: 0,
-          userName: '',
+          id: '',
+          email: '',
         };
         setAuthState(newAuthState);
         window.location.href = '/authentication/login';
