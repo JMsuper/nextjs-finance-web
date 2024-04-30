@@ -23,6 +23,8 @@ import { DeleteSaveStockDialog } from './DeleteSaveStockDialog';
 
 interface InfoComponentProps {
   selectedStockInfo: SaveStockInfo;
+  savedStockInfoList: SaveStockInfo[];
+  setSavedStockInfoList: React.Dispatch<React.SetStateAction<SaveStockInfo[]>>;
 }
 
 interface ICustomListItem {
@@ -50,16 +52,18 @@ const CustomListItem: React.FC<ICustomListItem> = ({
 
 export const InfoComponent: React.FC<InfoComponentProps> = ({
   selectedStockInfo,
+  savedStockInfoList,
+  setSavedStockInfoList,
 }) => {
   const [priceInfo, setPriceInfo] = useState<StockPriceInfo>(
     selectedStockInfo.stockPriceInfo,
   );
   const [priceColor, setPriceColor] = useState<string>('black');
 
-  const [expectedRate, setExpectedRate] = useState<number>(0);
+  const [expectedRate, setExpectedRate] = useState<number | null>(null);
   const [targetRate, setTargetRate] = useState<number>(0);
-  const [targetPrice, setTargetPrice] = useState<number>(0);
-  const [expectedAfterROE, setExpectedAfterROE] = useState<number>(0);
+  const [targetPrice, setTargetPrice] = useState<number | null>(null);
+  const [expectedAfterROE, setExpectedAfterROE] = useState<number | null>(null);
 
   const [financeDialogOpen, setFinanceDialogOpen] = useState(false);
   const [isUpdateTargetRateButtonClick, setIsUpdateTargetRateButtonClick] =
@@ -84,6 +88,7 @@ export const InfoComponent: React.FC<InfoComponentProps> = ({
   };
 
   useEffect(() => {
+    console.log(selectedStockInfo.targetRate);
     setPriceInfo(selectedStockInfo.stockPriceInfo);
     changePriceColor(selectedStockInfo.stockPriceInfo.difference);
     setExpectedRate(selectedStockInfo.expectedRate);
@@ -92,39 +97,46 @@ export const InfoComponent: React.FC<InfoComponentProps> = ({
     setExpectedAfterROE(selectedStockInfo.afterTenYearsAverageROE);
   }, [selectedStockInfo]);
 
-  useEffect(() => {
-    const afterTenYearBPS = calculateFutureValue(
-      selectedStockInfo.bps,
-      selectedStockInfo.afterTenYearsAverageROE,
-    );
-    const calculatedTargetPrice = calculateTargetPrice(
-      targetRate / 100,
-      afterTenYearBPS,
-    );
-    setTargetPrice(calculatedTargetPrice);
-    selectedStockInfo.targetRate = targetRate;
-    selectedStockInfo.targetPrice = calculatedTargetPrice;
-  }, [targetRate]);
+  const handleTargetRateChange = (updatedTargetRate: number) => {
+    selectedStockInfo.targetRate = updatedTargetRate;
+    if (expectedAfterROE !== null) {
+      const afterTenYearBPS = calculateFutureValue(
+        selectedStockInfo.bps,
+        expectedAfterROE,
+      );
+      const calculatedTargetPrice = calculateTargetPrice(
+        updatedTargetRate / 100,
+        afterTenYearBPS,
+      );
+      setTargetPrice(calculatedTargetPrice);
+      selectedStockInfo.targetPrice = calculatedTargetPrice;
+    }
+  };
 
-  useEffect(() => {
-    const afterTenYearBPS = calculateFutureValue(
-      selectedStockInfo.bps,
-      expectedAfterROE,
-    );
-    const calculatedExpectedRate = calculateExpectedRate(
-      afterTenYearBPS,
-      priceInfo.openingPrice,
-    );
-    const calculatedTargetPrice = calculateTargetPrice(
-      targetRate / 100,
-      afterTenYearBPS,
-    );
-    setExpectedRate(calculatedExpectedRate);
-    setTargetPrice(calculatedTargetPrice);
-    selectedStockInfo.targetPrice = calculatedTargetPrice;
-    selectedStockInfo.expectedRate = calculatedExpectedRate;
-    selectedStockInfo.afterTenYearsAverageROE = expectedAfterROE;
-  }, [expectedAfterROE]);
+  const handleExpectedROEChange = (updatedExpectedROE: number) => {
+    if (updatedExpectedROE !== null) {
+      selectedStockInfo.afterTenYearsAverageROE = updatedExpectedROE;
+
+      if (priceInfo.openingPrice !== 0) {
+        const afterTenYearBPS = calculateFutureValue(
+          selectedStockInfo.bps,
+          updatedExpectedROE,
+        );
+        const calculatedExpectedRate = calculateExpectedRate(
+          afterTenYearBPS,
+          priceInfo.openingPrice,
+        );
+        const calculatedTargetPrice = calculateTargetPrice(
+          targetRate / 100,
+          afterTenYearBPS,
+        );
+        setExpectedRate(calculatedExpectedRate);
+        setTargetPrice(calculatedTargetPrice);
+        selectedStockInfo.targetPrice = calculatedTargetPrice;
+        selectedStockInfo.expectedRate = calculatedExpectedRate;
+      }
+    }
+  };
 
   return (
     <Grid container spacing="15">
@@ -144,19 +156,23 @@ export const InfoComponent: React.FC<InfoComponentProps> = ({
         setTargetRate={setTargetRate}
         corpCode={selectedStockInfo.corpCd}
         expectedROE={selectedStockInfo.afterTenYearsAverageROE}
+        handleChange={handleTargetRateChange}
       />
       <ExpectedROEUpdateDialog
         open={isUpdateROEButtonClick}
         setOpen={setIsUpdateROEButtonClick}
-        expectedROE={expectedAfterROE}
+        expectedROE={expectedAfterROE ?? 0}
         setExpectedROE={setExpectedAfterROE}
         corpCode={selectedStockInfo.corpCd}
         targetRate={selectedStockInfo.targetRate}
+        handleChange={handleExpectedROEChange}
       />
       <DeleteSaveStockDialog
         open={isDeleteButtonClick}
         setOpen={setIsDeleteButtonClick}
         corpCode={selectedStockInfo.corpCd}
+        savedStockInfoList={savedStockInfoList}
+        setSavedStockInfoList={setSavedStockInfoList}
       />
 
       <Grid item xs={3}>

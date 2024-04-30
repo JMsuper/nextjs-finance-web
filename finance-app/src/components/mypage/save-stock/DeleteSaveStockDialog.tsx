@@ -8,24 +8,38 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import Config from '@/configs/config.export';
 import { Alert, Typography } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import { SaveStockInfo } from '@/components/shared/StockInfo';
 
 export interface DeleteSaveStockDialogProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   corpCode: string;
+  savedStockInfoList: SaveStockInfo[];
+  setSavedStockInfoList: React.Dispatch<React.SetStateAction<SaveStockInfo[]>>;
 }
 
 export const DeleteSaveStockDialog = ({
   open,
   setOpen,
   corpCode,
+  savedStockInfoList,
+  setSavedStockInfoList,
 }: DeleteSaveStockDialogProps): React.ReactElement => {
   const [isSaveButtonClicked, setIsSaveButtonClicked] = useState(false);
   const [isDeleteSuccess, setIsDeleteSuccess] = useState(false);
+  const router = useRouter();
 
   const handleClose = () => {
+    if (isDeleteSuccess) {
+      const newSavedStockInfoList = savedStockInfoList.filter(
+        (stockInfo) => stockInfo.corpCd !== corpCode,
+      );
+      setSavedStockInfoList(newSavedStockInfoList);
+    }
+    setIsSaveButtonClicked(false);
+    setIsDeleteSuccess(false);
     setOpen(false);
-    window.location.reload();
   };
 
   const handleSubmit = () => {

@@ -18,6 +18,7 @@ export interface TargetRateIUpdateDialogProps {
   setTargetRate: React.Dispatch<React.SetStateAction<number>>;
   corpCode: string;
   expectedROE: number;
+  handleChange: (updatedTargetRate: number) => void;
 }
 
 export const TargetRateIUpdateDialog = ({
@@ -27,6 +28,7 @@ export const TargetRateIUpdateDialog = ({
   setTargetRate,
   corpCode,
   expectedROE,
+  handleChange,
 }: TargetRateIUpdateDialogProps): React.ReactElement => {
   const [isSaveButtonClicked, setIsSaveButtonClicked] = useState(false);
   const [updatedTargetRate, setUpdatedTargetRate] = useState<string>(
@@ -83,7 +85,9 @@ export const TargetRateIUpdateDialog = ({
     })
       .then((response) => {
         if (response.ok) {
-          setTargetRate(Number(updatedTargetRate));
+          const numberOfUpdatedTargetRate = Number(updatedTargetRate);
+          setTargetRate(numberOfUpdatedTargetRate);
+          handleChange(numberOfUpdatedTargetRate);
         } else {
           console.error('Update failed:', response.statusText);
           setIsUpdateFail(true);

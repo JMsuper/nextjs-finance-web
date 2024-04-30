@@ -15,9 +15,10 @@ export interface ExpectedROEUpdateDialogProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   expectedROE: number;
-  setExpectedROE: React.Dispatch<React.SetStateAction<number>>;
+  setExpectedROE: React.Dispatch<React.SetStateAction<number | null>>;
   corpCode: string;
   targetRate: number;
+  handleChange: (updatedExpectedROE: number) => void;
 }
 
 export const ExpectedROEUpdateDialog = ({
@@ -27,6 +28,7 @@ export const ExpectedROEUpdateDialog = ({
   setExpectedROE,
   corpCode,
   targetRate,
+  handleChange,
 }: ExpectedROEUpdateDialogProps): React.ReactElement => {
   const [isSaveButtonClicked, setIsSaveButtonClicked] = useState(false);
   const [updatedExpectedROE, setUpdatedExpectedROE] = useState<string>(
@@ -43,11 +45,11 @@ export const ExpectedROEUpdateDialog = ({
   };
 
   const checkValidation = (value: string) => {
-    let numberOfTargetRate = Number(value);
+    let numberOfExpectedROE = Number(value);
     if (
-      isNaN(numberOfTargetRate) ||
-      numberOfTargetRate <= 0 ||
-      numberOfTargetRate >= 1
+      isNaN(numberOfExpectedROE) ||
+      numberOfExpectedROE <= 0 ||
+      numberOfExpectedROE >= 1
     ) {
       setValidationError(true);
       return false;
@@ -83,7 +85,9 @@ export const ExpectedROEUpdateDialog = ({
     })
       .then((response) => {
         if (response.ok) {
-          setExpectedROE(Number(updatedExpectedROE));
+          const numberOfExpectedROE = Number(updatedExpectedROE);
+          setExpectedROE(numberOfExpectedROE);
+          handleChange(numberOfExpectedROE);
         } else {
           console.error('Update failed:', response.statusText);
           setIsUpdateFail(true);

@@ -210,6 +210,12 @@ const StockInfoTable: React.FC<StockInfoTableProps> = ({ rows }) => {
                         <TableCell align="center">-</TableCell>
                         <TableCell align="center">-</TableCell>
                         <TableCell align="center">-</TableCell>
+                        <TableCell align="center">
+                          <SaveStockButton
+                            corpCode={row.corpCd}
+                            stockName={row.name}
+                          />
+                        </TableCell>
                       </>
                     ) : (
                       <>

@@ -15,10 +15,7 @@ import MemoComponent, {
   IMemo,
 } from '@/components/mypage/save-stock/MemoComponent';
 import ReportTable from '@/components/mypage/save-stock/ReportTable';
-
-interface ISaveStockContainer {
-  savedStockInfoList: SaveStockInfo[];
-}
+import Config from '@/configs/config.export';
 
 const memoList: IMemo[] = [
   {
@@ -33,15 +30,38 @@ const memoList: IMemo[] = [
   },
 ];
 
-export const SaveStockContainer: React.FC<ISaveStockContainer> = ({
-  savedStockInfoList,
-}) => {
+export const SaveStockContainer: React.FC = () => {
   const [selectedStockName, setSelectedStockName] = useState<string>('');
   const [selectedStockInfo, setSelectedStockInfo] = useState<SaveStockInfo>();
 
+  const [savedStockInfoList, setSavedStockInfoList] = useState<SaveStockInfo[]>(
+    [],
+  );
+
   useEffect(() => {
+    const requestUrl = `${Config().baseUrl}/api/corp-info/user`;
+    fetch(requestUrl, {
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then((response) => {
+        if (response.ok) {
+          response.json().then((data) => {
+            setSavedStockInfoList(data);
+          });
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    console.log(savedStockInfoList);
     if (savedStockInfoList.length > 0) {
       handleChange(savedStockInfoList[0].name);
+    } else {
+      handleChange('');
     }
   }, [savedStockInfoList]);
 
@@ -51,7 +71,7 @@ export const SaveStockContainer: React.FC<ISaveStockContainer> = ({
     const stockInfo: SaveStockInfo | undefined = savedStockInfoList.find(
       (stockInfo) => stockInfo.name === value,
     );
-    if (!stockInfo) return;
+    // if (!stockInfo) return;
     setSelectedStockInfo(stockInfo);
   };
 
@@ -94,7 +114,11 @@ export const SaveStockContainer: React.FC<ISaveStockContainer> = ({
         </Typography>
       ) : (
         <Box>
-          <InfoComponent selectedStockInfo={selectedStockInfo}></InfoComponent>
+          <InfoComponent
+            selectedStockInfo={selectedStockInfo}
+            savedStockInfoList={savedStockInfoList}
+            setSavedStockInfoList={setSavedStockInfoList}
+          ></InfoComponent>
           <Divider sx={{ my: '20px' }} />
           <ReportTable reportList={selectedStockInfo.reportList} />
           <Divider sx={{ my: '20px' }} />

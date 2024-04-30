@@ -12,14 +12,15 @@ import {
 } from '@mui/material';
 
 import { IconListCheck, IconMail, IconUser } from '@tabler/icons-react';
-import Config from '@/configs/config.export';
 import { useRecoilState } from 'recoil';
 import { AuthState, IAuthState } from '@/app/authentication/auth/AuthState';
 import { handleLogout } from '@/utils/eventHandler';
+import { useRouter } from 'next/navigation';
 
 const Profile = () => {
   const [anchorEl2, setAnchorEl2] = useState(null);
   const [authState, setAuthState] = useRecoilState(AuthState);
+  const router = useRouter();
 
   const handleClick2 = (event: any) => {
     setAnchorEl2(event.currentTarget);
@@ -72,7 +73,7 @@ const Profile = () => {
         >
           <MenuItem
             onClick={() => {
-              window.location.href = '/mypage/user-info';
+              router.push('/mypage/user-info');
             }}
           >
             <ListItemIcon>
@@ -82,7 +83,7 @@ const Profile = () => {
           </MenuItem>
           <MenuItem
             onClick={() => {
-              window.location.href = '/mypage/save-stock';
+              router.push('/mypage/save-stock');
             }}
           >
             <ListItemIcon>
