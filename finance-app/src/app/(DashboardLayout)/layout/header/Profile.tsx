@@ -71,16 +71,24 @@ const Profile = () => {
           }}
         >
           <MenuItem>
-            <ListItemIcon>
+            <ListItemIcon
+              onClick={() => {
+                window.location.href = '/mypage/user-info';
+              }}
+            >
               <IconUser width={20} />
             </ListItemIcon>
             <ListItemText>내 정보</ListItemText>
           </MenuItem>
           <MenuItem>
-            <ListItemIcon>
+            <ListItemIcon
+              onClick={() => {
+                window.location.href = '/mypage/save-stock';
+              }}
+            >
               <IconListCheck width={20} />
             </ListItemIcon>
-            <ListItemText>저장 종목 관리</ListItemText>
+            <ListItemText>관심종목 관리</ListItemText>
           </MenuItem>
           <Box mt={1} py={1} px={2}>
             <Button

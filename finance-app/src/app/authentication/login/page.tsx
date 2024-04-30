@@ -56,6 +56,7 @@ const Login2 = () => (
                   mb={1}
                 >
                   로그인하여 눈덩이 주식 서비스를 이용해보세요.
+                  <br /> 테스트 ID : test123, 테스트 PW : 123123
                 </Typography>
               }
               subtitle={
