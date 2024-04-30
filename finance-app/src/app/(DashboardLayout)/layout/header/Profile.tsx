@@ -70,22 +70,22 @@ const Profile = () => {
             },
           }}
         >
-          <MenuItem>
-            <ListItemIcon
-              onClick={() => {
-                window.location.href = '/mypage/user-info';
-              }}
-            >
+          <MenuItem
+            onClick={() => {
+              window.location.href = '/mypage/user-info';
+            }}
+          >
+            <ListItemIcon>
               <IconUser width={20} />
             </ListItemIcon>
             <ListItemText>내 정보</ListItemText>
           </MenuItem>
-          <MenuItem>
-            <ListItemIcon
-              onClick={() => {
-                window.location.href = '/mypage/save-stock';
-              }}
-            >
+          <MenuItem
+            onClick={() => {
+              window.location.href = '/mypage/save-stock';
+            }}
+          >
+            <ListItemIcon>
               <IconListCheck width={20} />
             </ListItemIcon>
             <ListItemText>관심종목 관리</ListItemText>
