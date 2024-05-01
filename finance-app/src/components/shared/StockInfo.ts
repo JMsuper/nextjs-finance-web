@@ -16,6 +16,7 @@ export interface StockInfo {
 }
 
 export interface SaveStockInfo {
+  saveCorpInfoId: number;
   searchTime: string;
   name: string;
   stockCd: string;
@@ -28,6 +29,7 @@ export interface SaveStockInfo {
   afterTenYearsAverageROE: number;
   stockPriceInfo: StockPriceInfo;
   reportList: DisclosureReport[];
+  memoList: IMemo[];
 }
 
 export interface DisclosureReport {
@@ -37,4 +39,10 @@ export interface DisclosureReport {
   flrNm: string;
   rceptDt: string;
   rm: string;
+}
+
+export interface IMemo {
+  memoId: number;
+  content: string;
+  createdAt: Date;
 }

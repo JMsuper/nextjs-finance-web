@@ -11,32 +11,17 @@ import { SaveStockInfo } from '../../components/shared/StockInfo';
 import { useEffect, useState } from 'react';
 import { formatDate } from '@/utils/NumberUtil';
 import InfoComponent from '@/components/mypage/save-stock/InfoComponent';
-import MemoComponent, {
-  IMemo,
-} from '@/components/mypage/save-stock/MemoComponent';
+import MemoComponent from '@/components/mypage/save-stock/MemoComponent';
 import ReportTable from '@/components/mypage/save-stock/ReportTable';
 import Config from '@/configs/config.export';
-
-const memoList: IMemo[] = [
-  {
-    id: 1,
-    title: 'test',
-    content: 'test content',
-  },
-  {
-    id: 2,
-    title: 'test2',
-    content: 'test content2',
-  },
-];
 
 export const SaveStockContainer: React.FC = () => {
   const [selectedStockName, setSelectedStockName] = useState<string>('');
   const [selectedStockInfo, setSelectedStockInfo] = useState<SaveStockInfo>();
-
   const [savedStockInfoList, setSavedStockInfoList] = useState<SaveStockInfo[]>(
     [],
   );
+  const [savedStockInfoLength, setSavedStockInfoLength] = useState<number>(0);
 
   useEffect(() => {
     const requestUrl = `${Config().baseUrl}/api/corp-info/user`;
@@ -58,6 +43,11 @@ export const SaveStockContainer: React.FC = () => {
 
   useEffect(() => {
     console.log(savedStockInfoList);
+    if (savedStockInfoList.length === savedStockInfoLength) {
+      return;
+    }
+
+    setSavedStockInfoLength(savedStockInfoList.length);
     if (savedStockInfoList.length > 0) {
       handleChange(savedStockInfoList[0].name);
     } else {
@@ -71,7 +61,6 @@ export const SaveStockContainer: React.FC = () => {
     const stockInfo: SaveStockInfo | undefined = savedStockInfoList.find(
       (stockInfo) => stockInfo.name === value,
     );
-    // if (!stockInfo) return;
     setSelectedStockInfo(stockInfo);
   };
 
@@ -122,11 +111,11 @@ export const SaveStockContainer: React.FC = () => {
           <Divider sx={{ my: '20px' }} />
           <ReportTable reportList={selectedStockInfo.reportList} />
           <Divider sx={{ my: '20px' }} />
-          {/* <MemoComponent
-            memo={memoList[0]}
-            onEdit={() => {}}
-            onDelete={() => {}}
-          ></MemoComponent> */}
+          <MemoComponent
+            selectedStockInfo={selectedStockInfo}
+            savedStockInfoList={savedStockInfoList}
+            setSavedStockInfoList={setSavedStockInfoList}
+          ></MemoComponent>
         </Box>
       )}
     </Box>
