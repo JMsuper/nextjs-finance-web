@@ -39,11 +39,11 @@ const CustomListItem: React.FC<ICustomListItem> = ({
   contentColor,
 }) => {
   return (
-    <ListItem sx={{ py: '6px' }}>
-      <Typography variant="subtitle1" mr="10px">
+    <ListItem sx={{ py: '4px' }}>
+      <Typography variant="body2" mr="10px">
         {label} :
       </Typography>
-      <Typography variant="body1" color={contentColor}>
+      <Typography variant="body2" color={contentColor}>
         {value}
       </Typography>
     </ListItem>
@@ -71,7 +71,7 @@ export const InfoComponent: React.FC<InfoComponentProps> = ({
   const [isUpdateROEButtonClick, setIsUpdateROEButtonClick] = useState(false);
   const [isDeleteButtonClick, setIsDeleteButtonClick] = useState(false);
 
-  const infoCardHeight = '230px';
+  const infoCardHeight = '170px';
 
   const changePriceColor = (difference: number) => {
     if (difference === 0) {
@@ -281,8 +281,9 @@ export const InfoComponent: React.FC<InfoComponentProps> = ({
         </Card>
       </Grid>
       <Grid item xs={3} alignContent="center">
-        <Stack direction="column" spacing="20px">
+        <Stack direction="column" spacing="10px">
           <Button
+            size="small"
             color="primary"
             variant="outlined"
             onClick={() => {
@@ -292,6 +293,7 @@ export const InfoComponent: React.FC<InfoComponentProps> = ({
             목표수익률 변경
           </Button>
           <Button
+            size="small"
             color="primary"
             variant="outlined"
             onClick={() => {
@@ -301,6 +303,7 @@ export const InfoComponent: React.FC<InfoComponentProps> = ({
             예상 ROE 변경
           </Button>
           <Button
+            size="small"
             color="primary"
             variant="outlined"
             onClick={() => setFinanceDialogOpen(true)}
@@ -308,6 +311,7 @@ export const InfoComponent: React.FC<InfoComponentProps> = ({
             재무정보 조회
           </Button>
           <Button
+            size="small"
             color="error"
             variant="outlined"
             onClick={() => setIsDeleteButtonClick(true)}
