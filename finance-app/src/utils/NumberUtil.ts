@@ -2,7 +2,6 @@ import { isNumber, isObject, isString } from 'lodash';
 
 export const formatDate = (date: string) => {
   if (!date) return '';
-  console.log(date);
 
   const dateObj = new Date(date);
   return dateObj.toLocaleString();

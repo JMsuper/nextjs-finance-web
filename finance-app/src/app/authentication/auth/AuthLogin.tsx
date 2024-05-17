@@ -57,8 +57,6 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
       requestUrl += '?remember-me=true';
     }
 
-    console.log(id, password);
-
     fetch(requestUrl, {
       method: 'POST',
       credentials: 'include',

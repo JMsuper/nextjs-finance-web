@@ -1,4 +1,3 @@
-import { AuthState } from '@/app/authentication/auth/AuthState';
 import {
   IconBellPlus,
   IconLayoutDashboard,
@@ -43,13 +42,13 @@ export const NoLoginMenuitems = [
   },
   {
     id: uniqueId(),
-    title: '매수/매도 알리미',
+    title: '주가 알리미',
     icon: IconBellPlus,
     href: '/services/alamy',
   },
   {
     id: uniqueId(),
-    title: '종목 정보 구독',
+    title: '신규 공시 구독',
     icon: IconReport,
     href: '/services/subscription',
   },
@@ -100,13 +99,13 @@ export const LoginMenuitems = [
   },
   {
     id: uniqueId(),
-    title: '매수/매도 알리미',
+    title: '주가 알리미',
     icon: IconBellPlus,
     href: '/services/alamy',
   },
   {
     id: uniqueId(),
-    title: '종목 정보 구독',
+    title: '신규 공시 구독',
     icon: IconReport,
     href: '/services/subscription',
   },
@@ -120,12 +119,12 @@ export const LoginMenuitems = [
     icon: IconListSearch,
     href: '/mypage/save-stock',
   },
-  {
-    id: uniqueId(),
-    title: '알리미/구독 관리',
-    icon: IconSettings,
-    href: '/mypage/services-management',
-  },
+  // {
+  //   id: uniqueId(),
+  //   title: '알리미/구독 관리',
+  //   icon: IconSettings,
+  //   href: '/mypage/services-management',
+  // },
   {
     id: uniqueId(),
     title: '내 정보',

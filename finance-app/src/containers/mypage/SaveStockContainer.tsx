@@ -1,12 +1,4 @@
-import {
-  Box,
-  Divider,
-  FormControl,
-  MenuItem,
-  Select,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Box, Divider, Stack, Typography } from '@mui/material';
 import { SaveStockInfo } from '../../components/shared/StockInfo';
 import { useEffect, useState } from 'react';
 import { formatDate } from '@/utils/NumberUtil';
@@ -14,6 +6,7 @@ import InfoComponent from '@/components/mypage/save-stock/InfoComponent';
 import MemoComponent from '@/components/mypage/save-stock/MemoComponent';
 import ReportTable from '@/components/mypage/save-stock/ReportTable';
 import Config from '@/configs/config.export';
+import { StockSelector } from '@/components/shared/StockSelector';
 
 export const SaveStockContainer: React.FC = () => {
   const [selectedStockName, setSelectedStockName] = useState<string>('');
@@ -42,7 +35,6 @@ export const SaveStockContainer: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log(savedStockInfoList);
     if (savedStockInfoList.length === savedStockInfoLength) {
       return;
     }
@@ -67,27 +59,11 @@ export const SaveStockContainer: React.FC = () => {
   return (
     <Box minWidth="1000px">
       <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <Stack direction="row" alignItems="center">
-          <Typography variant="h6" mr="10px">
-            종목 선택 :
-          </Typography>
-          <FormControl>
-            <Select
-              id="save-stock-select"
-              value={selectedStockName}
-              onChange={(event) => handleChange(event.target.value)}
-              size="small"
-            >
-              {savedStockInfoList.map((stockInfo) => {
-                return (
-                  <MenuItem key={stockInfo.corpCd} value={stockInfo.name}>
-                    {stockInfo.name}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-        </Stack>
+        <StockSelector
+          selectedStockName={selectedStockName}
+          savedStockInfoList={savedStockInfoList}
+          handleChange={handleChange}
+        />
         <Typography variant="body2" color="initial" align="right">
           🕒{' '}
           {selectedStockInfo?.searchTime &&

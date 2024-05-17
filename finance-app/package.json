@@ -11,6 +11,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@date-io/date-fns": "^3.0.0",
     "@emotion/cache": "latest",
     "@emotion/react": "latest",
     "@emotion/server": "latest",
@@ -18,10 +19,13 @@
     "@mui/icons-material": "latest",
     "@mui/lab": "^5.0.0-alpha.117",
     "@mui/material": "latest",
+    "@mui/x-date-pickers": "^7.3.2",
     "@tabler/icons-react": "^2.1.1",
     "@types/node": "18.11.18",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
+    "date-fns": "^3.6.0",
+    "dayjs": "^1.11.11",
     "env-cmd": "^10.1.0",
     "lodash": "^4.17.21",
     "next": "13.4.3",

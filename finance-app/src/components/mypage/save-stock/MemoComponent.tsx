@@ -183,7 +183,6 @@ const CreateMemoCard: React.FC<CreateMemoCardProps> = ({
   const CHARACTER_LIMIT = 500;
 
   useEffect(() => {
-    console.log(memoId, content);
     if (memoId && content) {
       handleEdit(content);
     }

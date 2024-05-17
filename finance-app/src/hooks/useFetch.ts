@@ -9,7 +9,7 @@ export default function useFetch(url: string) {
       .then((tempData) => {
         setData(tempData);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.error(error));
   }, [url]);
 
   return data;
