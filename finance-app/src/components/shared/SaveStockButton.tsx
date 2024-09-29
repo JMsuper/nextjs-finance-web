@@ -12,6 +12,7 @@ import {
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { RequestResultAlert } from './RequestResultAlert';
+import apiEndPoints from '@/api/apiEndPoints';
 
 export interface ISaveStockButton {
   stockName: string;
@@ -35,7 +36,7 @@ export const SaveStockButton: React.FC<ISaveStockButton> = ({
 
   const handleSave = () => {
     setIsButtonClicked(true);
-    const requestUrl = `${Config().baseUrl}/api/corp-info/user`;
+    const requestUrl = apiEndPoints.saveCorp(authState.id,corpCode);
 
     fetch(requestUrl, {
       method: 'POST',

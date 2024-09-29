@@ -7,8 +7,12 @@ import MemoComponent from '@/components/mypage/save-stock/MemoComponent';
 import ReportTable from '@/components/mypage/save-stock/ReportTable';
 import Config from '@/configs/config.export';
 import { StockSelector } from '@/components/shared/StockSelector';
+import apiEndPoints from '@/api/apiEndPoints';
+import { useRecoilState } from 'recoil';
+import { AuthState } from '@/app/authentication/auth/AuthState';
 
 export const SaveStockContainer: React.FC = () => {
+  const [authState] = useRecoilState(AuthState);
   const [selectedStockName, setSelectedStockName] = useState<string>('');
   const [selectedStockInfo, setSelectedStockInfo] = useState<SaveStockInfo>();
   const [savedStockInfoList, setSavedStockInfoList] = useState<SaveStockInfo[]>(
@@ -17,7 +21,7 @@ export const SaveStockContainer: React.FC = () => {
   const [savedStockInfoLength, setSavedStockInfoLength] = useState<number>(0);
 
   useEffect(() => {
-    const requestUrl = `${Config().baseUrl}/api/corp-info/user`;
+    const requestUrl = apiEndPoints.getSavedCorps(authState.id);
     fetch(requestUrl, {
       method: 'GET',
       credentials: 'include',

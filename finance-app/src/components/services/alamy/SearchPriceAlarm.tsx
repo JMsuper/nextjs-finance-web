@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import { Button, Chip, Paper, Stack, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { AlarmInfoListForShow } from '@/utils/DomainInfo';
 import dayjs, { Dayjs } from 'dayjs';
+import apiEndPoints from '@/api/apiEndPoints';
 
 const TableCells = [
     { id: 'stockName', name: '종목명' },
@@ -38,7 +39,7 @@ const SearchPriceAlarm: React.FC = () => {
     const [alamyData, setAlamyData] = React.useState<PriceAlarm[]>([]);
   
     useEffect(() => {
-      fetch(`${Config().baseUrl}/api/alarm/price`, {
+      fetch(apiEndPoints.getPriceAlarms(), {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -70,7 +71,7 @@ const SearchPriceAlarm: React.FC = () => {
         active: boolean,
         stockName: string,
       ) => {
-        fetch(`${Config().baseUrl}/api/alarm/price/status`, {
+        fetch(apiEndPoints.updatePriceAlarm(id,active), {
           method: 'PUT',
           credentials: 'include',
           headers: {
@@ -114,7 +115,7 @@ const SearchPriceAlarm: React.FC = () => {
       };
 
       const handleDeleteButtonClick = (id: number, stockName: string) => {
-        fetch(`${Config().baseUrl}/api/alarm/price`, {
+        fetch(apiEndPoints.deletePriceAlarm(id), {
           method: 'DELETE',
           credentials: 'include',
           headers: {

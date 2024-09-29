@@ -88,7 +88,6 @@ export const InfoComponent: React.FC<InfoComponentProps> = ({
   };
 
   useEffect(() => {
-    console.log(selectedStockInfo.targetRate);
     setPriceInfo(selectedStockInfo.stockPriceInfo);
     changePriceColor(selectedStockInfo.stockPriceInfo.difference);
     setExpectedRate(selectedStockInfo.expectedRate);

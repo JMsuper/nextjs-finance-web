@@ -24,12 +24,13 @@ import StepFive from '@/containers/screening/stepFive/StepFive';
 import StepSix from '@/containers/screening/stepSix/StepSix';
 import DashboardCard from '../../../components/shared/DashboardCard';
 import { StockFinanceInfo } from './StockFinanceInfo';
+import apiEndPoints from '@/api/apiEndPoints';
 
 const ScreeningLayout = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState(new Set<number>());
   const rows: StockFinanceInfo[] = useFetch(
-    `${Config().baseUrl}/screening/step1`,
+    apiEndPoints.getScreening(),
   );
   const [selectedRows, setSelectedRows] = useState<StockFinanceInfo[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);

@@ -14,6 +14,7 @@ import PostAddIcon from '@mui/icons-material/PostAdd';
 import { enqueueSnackbar } from 'notistack';
 import { IMemo, SaveStockInfo } from '@/components/shared/StockInfo';
 import Config from '@/configs/config.export';
+import apiEndPoints from '@/api/apiEndPoints';
 
 const convertHtmlBreaksToNewline = (str: string) => {
   return str.replace(/<br\s*\/?>/gm, '\r\n');
@@ -25,7 +26,7 @@ const saveMemo = (
   setMemoList: React.Dispatch<React.SetStateAction<IMemo[]>>,
   content: string,
 ) => {
-  const requestUrl = `${Config().baseUrl}/api/memo`;
+  const requestUrl = apiEndPoints.createMemo();
 
   fetch(requestUrl, {
     method: 'POST',
@@ -71,7 +72,7 @@ const updateMemo = (
   memoId: number,
   content: string,
 ) => {
-  const requestUrl = `${Config().baseUrl}/api/memo`;
+  const requestUrl = apiEndPoints.updateMemo(memoId);
 
   fetch(requestUrl, {
     method: 'PUT',
@@ -124,7 +125,7 @@ const deleteMemo = (
   setMemoList: React.Dispatch<React.SetStateAction<IMemo[]>>,
   memoId: number,
 ) => {
-  const requestUrl = `${Config().baseUrl}/api/memo`;
+  const requestUrl = apiEndPoints.deleteMemo(memoId);
 
   fetch(requestUrl, {
     method: 'DELETE',

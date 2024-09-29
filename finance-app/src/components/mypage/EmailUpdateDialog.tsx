@@ -11,6 +11,7 @@ import { useRecoilState } from 'recoil';
 import { AuthState, IAuthState } from '@/app/authentication/auth/AuthState';
 import Config from '@/configs/config.export';
 import { Alert, Typography } from '@mui/material';
+import apiEndPoints from '@/api/apiEndPoints';
 
 export interface IEmailUpdateDialogProps {
   open: boolean;
@@ -43,7 +44,7 @@ export const EmailUpdateDialog = ({
       return;
     }
 
-    const requestUrl = `${Config().baseUrl}/api/user/email`;
+    const requestUrl = apiEndPoints.updateUserEmail(authState.id);
 
     fetch(requestUrl, {
       method: 'PUT',

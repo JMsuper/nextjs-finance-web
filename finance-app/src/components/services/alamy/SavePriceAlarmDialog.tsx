@@ -1,3 +1,4 @@
+import apiEndPoints from '@/api/apiEndPoints';
 import Config from '@/configs/config.export';
 import {
   Button,
@@ -20,7 +21,7 @@ const SavePriceAlarmDialog: React.FC<SavePriceAlarmDialogProps> = ({
   prop,
 }) => {
   const handleSaveButtonClick = (prop: ICreatePriceAlarm) => {
-    fetch(`${Config().baseUrl}/api/alarm/price`, {
+    fetch(apiEndPoints.createPriceAlarm(), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 import { IAuthState } from '@/app/authentication/auth/AuthState';
+import apiEndPoints from '@/api/apiEndPoints';
 import Config from '@/configs/config.export';
 
 export interface ILogoutProps {
@@ -6,7 +7,7 @@ export interface ILogoutProps {
 }
 
 export const handleLogout = ({ setAuthState }: ILogoutProps) => {
-  fetch(`${Config().baseUrl}/api/logout`, {
+  fetch(apiEndPoints.logout(), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

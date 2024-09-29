@@ -24,6 +24,7 @@ import { enqueueSnackbar } from 'notistack';
 import { IReportAlarm } from '@/containers/services/ReportAlarmContainer';
 import Config from '@/configs/config.export';
 import { SimpleBackdrop } from '@/components/shared/SimpleBackdrop';
+import apiEndPoints from '@/api/apiEndPoints';
 
 interface CreateReportAlamyProps {
   selectedReportAlarm: IReportAlarm;
@@ -66,7 +67,7 @@ export const CreateReportAlamy: React.FC<CreateReportAlamyProps> = ({
     }
 
     setFetchStart(true);
-    fetch(`${Config().baseUrl}/api/alarm/report`, {
+    fetch(apiEndPoints.updateAlarmReport(selectedReportAlarm.saveCorpInfoId), {
       method: 'PUT',
       credentials: 'include',
       headers: {

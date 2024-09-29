@@ -10,6 +10,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Config from '@/configs/config.export';
 import { Alert, InputAdornment, Typography } from '@mui/material';
 import CustomTextField from '@/components/shared/CustomTextField';
+import apiEndPoints from '@/api/apiEndPoints';
+import { useRecoilState } from 'recoil';
+import { AuthState } from '@/app/authentication/auth/AuthState';
 
 export interface TargetRateIUpdateDialogProps {
   open: boolean;
@@ -30,6 +33,7 @@ export const TargetRateIUpdateDialog = ({
   expectedROE,
   handleChange,
 }: TargetRateIUpdateDialogProps): React.ReactElement => {
+  const [authState, setAuthState] = useRecoilState(AuthState);
   const [isSaveButtonClicked, setIsSaveButtonClicked] = useState(false);
   const [updatedTargetRate, setUpdatedTargetRate] = useState<string>(
     `${targetRate}`,
@@ -68,7 +72,7 @@ export const TargetRateIUpdateDialog = ({
       return;
     }
 
-    const requestUrl = `${Config().baseUrl}/api/corp-info/user`;
+    const requestUrl = apiEndPoints.updateSavedCorp(authState.id,corpCode);
 
     fetch(requestUrl, {
       method: 'PUT',

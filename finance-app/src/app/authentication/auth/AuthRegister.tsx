@@ -6,6 +6,7 @@ import { Stack } from '@mui/system';
 import CustomTextField from '@/components/shared/CustomTextField';
 import Config from '@/configs/config.export';
 import { SimpleBackdrop } from '@/components/shared/SimpleBackdrop';
+import apiEndPoints from '@/api/apiEndPoints';
 
 interface registerType {
   title?: string;
@@ -83,7 +84,7 @@ const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
       return;
     }
 
-    const requestUrl = `${Config().baseUrl}/api/register`;
+    const requestUrl = apiEndPoints.register();
     setOpenBackdrop(true);
 
     fetch(requestUrl, {

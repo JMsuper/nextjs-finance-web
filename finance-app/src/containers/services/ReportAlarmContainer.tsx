@@ -2,6 +2,9 @@ import Config from '@/configs/config.export';
 import { Box, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { CreateReportAlamy } from '@/components/services/alamy/CreateReportAlamy';
+import apiEndPoints from '@/api/apiEndPoints';
+import { AuthState } from '@/app/authentication/auth/AuthState';
+import { useRecoilState } from 'recoil';
 
 export interface IReportAlarm{
   stockName: string,
@@ -13,11 +16,11 @@ export interface IReportAlarm{
 export const ReportAlarmContainer: React.FC = () => {
   const [selectedReportAlarm, setSelectedReportAlarm] = useState<IReportAlarm>();
   const [savedReportAlarmList, setSavedReportAlarmList] = useState<IReportAlarm[]>([]);
-
+  const [authState] = useRecoilState(AuthState);
   const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => {
-    const requestUrl = `${Config().baseUrl}/api/alarm/report`;
+    const requestUrl = apiEndPoints.getAlarmReports();
     fetch(requestUrl, {
       method: 'GET',
       credentials: 'include',
@@ -58,7 +61,10 @@ export const ReportAlarmContainer: React.FC = () => {
             handleChange={handleChange}
           ></CreateReportAlamy>
         ) : (
+          authState.isLogin ?
           <Typography>관심 종목을 등록해주세요</Typography>
+            :
+            <Typography>로그인 이후 사용 가능합니다</Typography>
         )}
     </Box>
   );

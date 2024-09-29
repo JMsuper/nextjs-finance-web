@@ -14,6 +14,7 @@ import { useRecoilState } from 'recoil';
 import { AuthState, IAuthState } from './AuthState';
 import Config from '@/configs/config.export';
 import { SimpleBackdrop } from '@/components/shared/SimpleBackdrop';
+import apiEndPoints from '@/api/apiEndPoints';
 
 interface loginType {
   title?: string;
@@ -51,7 +52,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
     }
 
     setOpenBackdrop(true);
-    let requestUrl = `${Config().baseUrl}/api/login`;
+    let requestUrl = apiEndPoints.login();
 
     if (rememerMe) {
       requestUrl += '?remember-me=true';

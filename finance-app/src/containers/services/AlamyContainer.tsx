@@ -4,6 +4,9 @@ import { SaveStockInfo } from '@/components/shared/StockInfo';
 import Config from '@/configs/config.export';
 import { Box, Tab, Tabs, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
+import apiEndPoints from '@/api/apiEndPoints';
+import { useRecoilState } from 'recoil';
+import { AuthState } from '@/app/authentication/auth/AuthState';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -30,6 +33,7 @@ function a11yProps(index: number) {
 
 export const AlamyContainer: React.FC = () => {
   const [value, setValue] = useState(0);
+  const [authState] = useRecoilState(AuthState);
   const [selectedStockName, setSelectedStockName] = useState<string>('');
   const [selectedStockInfo, setSelectedStockInfo] = useState<SaveStockInfo>();
   const [savedStockInfoList, setSavedStockInfoList] = useState<SaveStockInfo[]>(
@@ -39,7 +43,9 @@ export const AlamyContainer: React.FC = () => {
   const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => {
-    const requestUrl = `${Config().baseUrl}/api/corp-info/user`;
+    if(!authState.isLogin) return;
+
+    const requestUrl = apiEndPoints.getSavedCorps(authState.id);
     fetch(requestUrl, {
       method: 'GET',
       credentials: 'include',
@@ -99,7 +105,10 @@ export const AlamyContainer: React.FC = () => {
             handleChange={handleChange}
           ></CreateAlamy>
         ) : (
+          authState.isLogin ?
           <Typography>관심 종목을 등록해주세요</Typography>
+          :
+          <Typography>로그인 이후 사용 가능합니다</Typography>
         )}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>

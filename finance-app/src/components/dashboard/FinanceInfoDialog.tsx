@@ -27,6 +27,7 @@ import {
   convertNumberScaleWithCurrency,
 } from '@/utils/NumberUtil';
 import { on } from 'events';
+import apiEndPoints from '@/api/apiEndPoints';
 
 interface FinanceInfo {
   year: number;
@@ -90,7 +91,7 @@ const FinanceInfoDialog: React.FC<DialogProps> = ({
   useEffect(() => {
     let isMounted = true; // 마운트 상태 추적
 
-    const url = `${Config().baseUrl}/financeInfo/${corpCd}?startYear=${startYear}&endYear=${endYear}`;
+    const url = apiEndPoints.getFinanceData(corpCd,startYear,endYear);
 
     const fetchData = async () => {
       try {

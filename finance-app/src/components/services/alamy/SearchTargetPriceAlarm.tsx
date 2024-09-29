@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import { Button, Chip, Paper, Stack, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { CurrencyScaleOption, convertNumberScaleWithCurrency } from '@/utils/NumberUtil';
 import { AlarmInfoListForShow } from '@/utils/DomainInfo';
+import apiEndPoints from '@/api/apiEndPoints';
 
 const TableCells = [
     { id: 'stockName', name: '종목명' },
@@ -37,7 +38,7 @@ const SearchTargetPriceAlarm: React.FC = () => {
     const [alamyData, setAlamyData] = React.useState<TargetPriceAlarm[]>([]);
   
     useEffect(() => {
-      fetch(`${Config().baseUrl}/api/alarm/target-price`, {
+      fetch(apiEndPoints.getTargetPriceAlarms(), {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -67,7 +68,7 @@ const SearchTargetPriceAlarm: React.FC = () => {
         active: boolean,
         stockName: string,
       ) => {
-        fetch(`${Config().baseUrl}/api/alarm/target-price/status`, {
+        fetch(apiEndPoints.updateTargetPriceAlarm(id,active), {
           method: 'PUT',
           credentials: 'include',
           headers: {
@@ -111,7 +112,7 @@ const SearchTargetPriceAlarm: React.FC = () => {
       };
 
       const handleDeleteButtonClick = (id: number, stockName: string) => {
-        fetch(`${Config().baseUrl}/api/alarm/target-price`, {
+        fetch(apiEndPoints.deleteTargetPriceAlarm(id), {
           method: 'DELETE',
           credentials: 'include',
           headers: {

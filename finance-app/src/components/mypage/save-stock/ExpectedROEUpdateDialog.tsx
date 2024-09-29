@@ -10,6 +10,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Config from '@/configs/config.export';
 import { Alert, InputAdornment, Typography } from '@mui/material';
 import CustomTextField from '@/components/shared/CustomTextField';
+import apiEndPoints from '@/api/apiEndPoints';
+import { useRecoilState } from 'recoil';
+import { AuthState } from '@/app/authentication/auth/AuthState';
 
 export interface ExpectedROEUpdateDialogProps {
   open: boolean;
@@ -30,6 +33,7 @@ export const ExpectedROEUpdateDialog = ({
   targetRate,
   handleChange,
 }: ExpectedROEUpdateDialogProps): React.ReactElement => {
+  const [authState, setAuthState] = useRecoilState(AuthState);
   const [isSaveButtonClicked, setIsSaveButtonClicked] = useState(false);
   const [updatedExpectedROE, setUpdatedExpectedROE] = useState<string>(
     `${expectedROE}`,
@@ -68,7 +72,7 @@ export const ExpectedROEUpdateDialog = ({
       return;
     }
 
-    const requestUrl = `${Config().baseUrl}/api/corp-info/user`;
+    const requestUrl = apiEndPoints.updateSavedCorp(authState.id,corpCode);
 
     fetch(requestUrl, {
       method: 'PUT',
@@ -78,7 +82,6 @@ export const ExpectedROEUpdateDialog = ({
         'X-Requested-With': 'XMLHttpRequest',
       },
       body: JSON.stringify({
-        corpCode: corpCode,
         targetRate: targetRate,
         expectedROE: Number(updatedExpectedROE),
       }),

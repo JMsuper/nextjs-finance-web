@@ -55,7 +55,6 @@ interface StepTwoProps {
 }
 
 const StepTwo: React.FC<StepTwoProps> = ({ rows }) => {
-  // const rows: StockFinanceInfo[] = useFetch('/screening/step1');
 
   const [filter, setFilter] = useState('');
   const [page, setPage] = useState(0);

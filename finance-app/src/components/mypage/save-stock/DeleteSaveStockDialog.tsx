@@ -10,6 +10,9 @@ import Config from '@/configs/config.export';
 import { Alert, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { SaveStockInfo } from '@/components/shared/StockInfo';
+import apiEndPoints from '@/api/apiEndPoints';
+import { useRecoilState } from 'recoil';
+import { AuthState } from '@/app/authentication/auth/AuthState';
 
 export interface DeleteSaveStockDialogProps {
   open: boolean;
@@ -26,9 +29,9 @@ export const DeleteSaveStockDialog = ({
   savedStockInfoList,
   setSavedStockInfoList,
 }: DeleteSaveStockDialogProps): React.ReactElement => {
+  const [authState, setAuthState] = useRecoilState(AuthState);
   const [isSaveButtonClicked, setIsSaveButtonClicked] = useState(false);
   const [isDeleteSuccess, setIsDeleteSuccess] = useState(false);
-  const router = useRouter();
 
   const handleClose = () => {
     if (isDeleteSuccess) {
@@ -47,7 +50,7 @@ export const DeleteSaveStockDialog = ({
       return;
     }
 
-    const requestUrl = `${Config().baseUrl}/api/corp-info/user`;
+    const requestUrl = apiEndPoints.deleteSavedCorp(authState.id,corpCode);
 
     fetch(requestUrl, {
       method: 'DELETE',

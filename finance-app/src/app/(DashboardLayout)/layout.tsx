@@ -11,6 +11,7 @@ import {
 } from '../authentication/auth/AuthState';
 import Config from '@/configs/config.export';
 import { useRecoilState } from 'recoil';
+import apiEndPoints from '@/api/apiEndPoints';
 
 const MainWrapper = styled('div')(() => ({
   display: 'flex',
@@ -41,10 +42,10 @@ const RootLayout: React.FC<RootLayoutProps> = ({
 
   useEffect(() => {
     if (!authState.isLogin) {
-      const requestUrl = `${Config().baseUrl}/api/auto-login`;
+      const requestUrl = apiEndPoints.autoLogin();
 
       fetch(requestUrl, {
-        method: 'GET',
+        method: 'POST',
         credentials: 'include',
       }).then((response) => {
         if (response.ok) {
