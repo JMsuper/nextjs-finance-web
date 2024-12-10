@@ -1,11 +1,11 @@
 import {
   IconBellPlus,
+  IconHistory,
   IconLayoutDashboard,
   IconListSearch,
   IconLogin,
   IconReport,
   IconSearch,
-  IconSettings,
   IconUserEdit,
   IconUserPlus,
   IconZoomCode,
@@ -17,6 +17,12 @@ export const NoLoginMenuitems = [
   {
     navlabel: true,
     subheader: 'Home',
+  },
+  {
+    id: uniqueId(),
+    title: '서비스 소개',
+    icon: IconLayoutDashboard,
+    href: '/services/introduction',
   },
   {
     id: uniqueId(),
@@ -33,12 +39,6 @@ export const NoLoginMenuitems = [
   {
     navlabel: true,
     subheader: 'Services',
-  },
-  {
-    id: uniqueId(),
-    title: '서비스 소개',
-    icon: IconLayoutDashboard,
-    href: '/services/introduction',
   },
   {
     id: uniqueId(),
@@ -77,6 +77,12 @@ export const LoginMenuitems = [
   },
   {
     id: uniqueId(),
+    title: '서비스 소개',
+    icon: IconLayoutDashboard,
+    href: '/services/introduction',
+  },
+  {
+    id: uniqueId(),
     title: '주식 상장사 검색',
     icon: IconSearch,
     href: '/',
@@ -93,12 +99,6 @@ export const LoginMenuitems = [
   },
   {
     id: uniqueId(),
-    title: '서비스 소개',
-    icon: IconLayoutDashboard,
-    href: '/services/introduction',
-  },
-  {
-    id: uniqueId(),
     title: '주가 알리미',
     icon: IconBellPlus,
     href: '/services/alamy',
@@ -110,6 +110,12 @@ export const LoginMenuitems = [
     href: '/services/subscription',
   },
   {
+    id: uniqueId(),
+    title: '알림 기록 조회',
+    icon: IconHistory,
+    href: '/services/history',
+  },
+  {
     navlabel: true,
     subheader: 'MY PAGE',
   },
@@ -119,12 +125,6 @@ export const LoginMenuitems = [
     icon: IconListSearch,
     href: '/mypage/save-stock',
   },
-  // {
-  //   id: uniqueId(),
-  //   title: '알리미/구독 관리',
-  //   icon: IconSettings,
-  //   href: '/mypage/services-management',
-  // },
   {
     id: uniqueId(),
     title: '내 정보',
