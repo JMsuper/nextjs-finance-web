@@ -293,7 +293,7 @@ const MemoCard: React.FC<MemoCardProps> = ({
         <Card sx={{ p: '20px' }}>
           <Stack direction="row" justifyContent="space-between">
             <Box>
-              <Typography variant="body1" component="pre">
+              <Typography variant="body1" component="div" style={{ whiteSpace: 'pre-wrap' }}>
                 {content}
               </Typography>
               <Typography variant="caption">

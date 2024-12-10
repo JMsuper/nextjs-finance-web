@@ -22,13 +22,13 @@ export const NoLoginMenuitems = [
     id: uniqueId(),
     title: '서비스 소개',
     icon: IconLayoutDashboard,
-    href: '/services/introduction',
+    href: '/',
   },
   {
     id: uniqueId(),
     title: '주식 상장사 검색',
     icon: IconSearch,
-    href: '/',
+    href: '/search',
   },
   {
     id: uniqueId(),
@@ -79,13 +79,13 @@ export const LoginMenuitems = [
     id: uniqueId(),
     title: '서비스 소개',
     icon: IconLayoutDashboard,
-    href: '/services/introduction',
+    href: '/',
   },
   {
     id: uniqueId(),
     title: '주식 상장사 검색',
     icon: IconSearch,
-    href: '/',
+    href: '/search',
   },
   {
     id: uniqueId(),

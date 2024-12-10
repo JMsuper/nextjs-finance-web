@@ -248,11 +248,11 @@ export const HistoryContainer: React.FC = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell><Typography variant="h6">알림 유형</Typography></TableCell>
-                    <TableCell><Typography variant="h6">종목명</Typography></TableCell>
-                    <TableCell><Typography variant="h6">알림 내용</Typography></TableCell>
-                    <TableCell><Typography variant="h6">발생 시간</Typography></TableCell>
-                    <TableCell><Typography variant="h6"></Typography></TableCell>
+                    <TableCell>알림 유형</TableCell>
+                    <TableCell>종목명</TableCell>
+                    <TableCell>알림 내용</TableCell>
+                    <TableCell>발생 시간</TableCell>
+                    <TableCell></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -260,10 +260,10 @@ export const HistoryContainer: React.FC = () => {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => (
                       <TableRow key={row.id}>
-                        <TableCell sx={{ fontSize: '1.0em' }}>{row.type}</TableCell>
-                        <TableCell sx={{ fontSize: '1.0em' }}>{row.stockName}</TableCell>
-                        <TableCell sx={{ fontSize: '1.0em' }}>{row.message}</TableCell>
-                        <TableCell sx={{ fontSize: '1.0em' }}>{row.timestamp}</TableCell>
+                        <TableCell sx={{ fontSize: '0.85em' }}>{row.type}</TableCell>
+                        <TableCell sx={{ fontSize: '0.85em' }}>{row.stockName}</TableCell>
+                        <TableCell sx={{ fontSize: '0.85em' }}>{row.message}</TableCell>
+                        <TableCell sx={{ fontSize: '0.85em' }}>{row.timestamp}</TableCell>
                         <TableCell>
                           <Button onClick={() => handleDelete(row)}>삭제</Button>
                         </TableCell>
