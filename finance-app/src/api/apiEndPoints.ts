@@ -41,6 +41,10 @@ const apiEndPoints = {
     // user-controller
     updateUserPassword: (userId: string) => `${API_BASE_URL}/users/${userId}/password`,
     updateUserEmail: (userId: string) => `${API_BASE_URL}/users/${userId}/email`,
+
+    // notification-controller
+    getNotifications: () => `${API_BASE_URL}/notifications`,
+    deleteNotification: (notificationId: number) => `${API_BASE_URL}/notifications/${notificationId}`,
 };
 
 export default apiEndPoints;
