@@ -41,6 +41,12 @@ const ScreeningLayout = () => {
   const [selected, setSelected] = useState<string[]>([]);
 
   useEffect(() => {
+    rows.forEach(row => {
+      row.financeInfoList.sort((a, b) => b.year - a.year);
+    });
+  }, [rows])
+
+  useEffect(() => {
     const newSelectedRows: StockFinanceInfo[] = [];
 
     rows
