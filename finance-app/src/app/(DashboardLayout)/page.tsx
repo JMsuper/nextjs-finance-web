@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, IconButton } from '@mui/material';
 import PageContainer from '@/containers/PageContainer';
 import DashboardCard from '../../components/shared/DashboardCard';
 import Head from 'next/head';
@@ -11,8 +11,31 @@ const IntroductionPage: React.FC = () => (
       <Box>
         <>
           <header className="header">
-            <img src="/images/logos/logo.PNG" alt="Snowball Stock Logo" />
-            <h2>주식 상장사 검색, 종목 스크리닝, 주가 알리미까지 모두 한 곳에서</h2>
+            <div className="header-content">
+              <img src="/images/logos/logo.PNG" alt="Snowball Stock Logo" />
+              <h2>주식 상장사 검색, 종목 스크리닝, 주가 알리미까지 모두 한 곳에서</h2>
+            </div>
+            <IconButton 
+              href="https://github.com/JMsuper/java-bondtypestock-investment-strategy" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="github-button"
+              sx={{
+                border: '2px solid rgb(0, 0, 0)',
+                borderRadius: '8px',
+                padding: '8px',
+                '&:hover': {
+                  borderColor: '#1565c0',
+                  backgroundColor: 'rgba(25, 118, 210, 0.04)'
+                }
+              }}
+            >
+              <img 
+                src="/images/introduction/깃허브.PNG" 
+                alt="GitHub Link"
+                style={{ width: '100px', height: 'auto' }}
+              />
+            </IconButton>
           </header>
           <main className="container">
             {/* Section 1: 주식 상장사 검색 */}
@@ -83,6 +106,20 @@ const IntroductionPage: React.FC = () => (
               position: sticky;
               top: 0;
               z-index: 1000;
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
+            }
+
+            .header-content {
+              flex: 1;
+              text-align: center;
+            }
+
+            .github-button {
+              position: absolute;
+              top: 20px;
+              right: 20px;
             }
 
             .header img {
