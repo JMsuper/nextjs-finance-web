@@ -14,6 +14,8 @@ const IntroductionPage: React.FC = () => (
             <div className="header-content">
               <img src="/images/logos/logo.PNG" alt="Snowball Stock Logo" />
               <h2>주식 상장사 검색, 종목 스크리닝, 주가 알리미까지 모두 한 곳에서</h2>
+              <h4>서비스 운영 비용상의 문제로, API서버를 운영하고 있지 않습니다</h4>
+              <h4>프로젝트 세부 사항은 우측 상단의 github 링크를 참고 부탁드립니다</h4>
             </div>
             <IconButton 
               href="https://github.com/JMsuper/java-bondtypestock-investment-strategy" 
